@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ACadSharp\ACadSharp\ACadSharp.csproj" />
+    <ProjectReference Include="..\..\..\PDFsharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj" />
+  </ItemGroup>
+
+</Project>
