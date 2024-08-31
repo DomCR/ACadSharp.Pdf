@@ -11,8 +11,17 @@ using System.IO;
 
 namespace ACadSharp.Pdf
 {
+	/// <summary>
+	/// Exporter to create a pdf document.
+	/// </summary>
 	public class PdfExporter : IDisposable
 	{
+		/// <summary>
+		/// Notification event to get information about the export process.
+		/// </summary>
+		/// <remarks>
+		/// The notification system informs about any issue or non critical errors during the export.
+		/// </remarks>
 		public event NotificationEventHandler OnNotification;
 
 		public PdfExporterConfiguration Configuration { get; } = new PdfExporterConfiguration();
@@ -24,10 +33,18 @@ namespace ACadSharp.Pdf
 
 		private readonly PdfDocument _pdf;
 
+		/// <summary>
+		/// Initialize an instance of <see cref="PdfExporter"/>.
+		/// </summary>
+		/// <param name="path">Path where the pdf will be saved.</param>
 		public PdfExporter(string path) : this(File.Create(path))
 		{
 		}
 
+		/// <summary>
+		/// Initialize an instance of <see cref="PdfExporter"/>.
+		/// </summary>
+		/// <param name="stream">Stream where the pdf will be saved.</param>
 		public PdfExporter(Stream stream)
 		{
 			this._pdf = new PdfDocument(stream);
@@ -41,6 +58,12 @@ namespace ACadSharp.Pdf
 			}
 
 			PdfPage page = this._pdf.AddPage();
+			page.Size = PdfSharp.PageSize.A0;
+
+			foreach (Viewport vp in layout.Viewports)
+			{
+
+			}
 
 			throw new NotImplementedException();
 		}
@@ -72,11 +95,15 @@ namespace ACadSharp.Pdf
 			}
 		}
 
+		/// <summary>
+		/// Close the document and save it.
+		/// </summary>
 		public void Close()
 		{
 			this._pdf.Close();
 		}
 
+		/// <inheritdoc/>
 		public void Dispose()
 		{
 			_pdf.Dispose();

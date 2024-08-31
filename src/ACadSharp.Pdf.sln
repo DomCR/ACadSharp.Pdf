@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp.Pdf.Examples", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp", "..\..\PDFsharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj", "{81C811FE-F5AB-43F9-B765-4260A2555C33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp", "..\..\ACadSharp\ACadSharp\ACadSharp.csproj", "{BE797877-45A7-4F9F-8A3F-857E8419AEF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp", "..\..\ACadSharp\src\ACadSharp\ACadSharp.csproj", "{F8A2C07A-E790-4A8E-804F-8C1688321EE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,12 +36,12 @@ Global
 		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Test|Any CPU.ActiveCfg = Release|Any CPU
 		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Test|Any CPU.Build.0 = Release|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{BE797877-45A7-4F9F-8A3F-857E8419AEF5}.Test|Any CPU.Build.0 = Test|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{F8A2C07A-E790-4A8E-804F-8C1688321EE1}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +50,7 @@ Global
 		SolutionGuid = {BEC36C72-28D7-4685-A732-2964B45E36CF}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\..\ACadSharp\CSUtilities\CSMath\CSMath.projitems*{be797877-45a7-4f9f-8a3f-857e8419aef5}*SharedItemsImports = 5
-		..\..\ACadSharp\CSUtilities\CSUtilities\CSUtilities.projitems*{be797877-45a7-4f9f-8a3f-857e8419aef5}*SharedItemsImports = 5
+		..\..\ACadSharp\src\CSUtilities\CSMath\CSMath.projitems*{f8a2c07a-e790-4a8e-804f-8c1688321ee1}*SharedItemsImports = 5
+		..\..\ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{f8a2c07a-e790-4a8e-804f-8c1688321ee1}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
