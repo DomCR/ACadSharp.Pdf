@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ACadSharp\src\ACadSharp\ACadSharp.csproj" />
     <ProjectReference Include="..\..\..\PDFsharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj" />
+    <ProjectReference Include="..\ACadSharp\src\ACadSharp\ACadSharp.csproj" />
   </ItemGroup>
 
 </Project>
