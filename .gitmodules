@@ -1,0 +1,3 @@
+[submodule "src/ACadSharp"]
+	path = src/ACadSharp
+	url = https://github.com/DomCR/ACadSharp.git
