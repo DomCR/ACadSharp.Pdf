@@ -17,7 +17,7 @@ namespace ACadSharp.Pdf.Examples
 
 			exporter.OnNotification += NotificationHelper.LogConsoleNotification;
 
-			exporter.AddPage(doc.ModelSpace);
+			exporter.Add(doc.ModelSpace);
 
 			exporter.Close();
 		}

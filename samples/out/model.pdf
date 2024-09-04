@@ -1,16 +1,16 @@
 %PDF-1.4
 %”ÙÃ·
 % PDFsharp Version 0.1.0 (verbose mode)
-% Creation date: 08/06/2024 12:58:38             
-% Creation time: 2.804 seconds                   
-% File size: 4,660 bytes                         
+% Creation date: 09/04/2024 18:57:17             
+% Creation time: 0.210 seconds                   
+% File size: 4,672 bytes                         
 % Pages: 1                                       
 % Objects: 7                                     
 % This document is created from a DEBUG build. Do not use a DEBUG build of PDFsharp for production.
 %--------------------------------------------------------------------------------------------------
 1 0 obj   % PdfSharp.Pdf.PdfDocumentInformation
 <<
-  /CreationDate (D:20240806125838+02'00')
+  /CreationDate (D:20240904185717+02'00')
   /Creator (PDFsharp 0.1.0 \(www.pdfsharp.net\))
   /Producer (PDFsharp 0.1.0 under Microsoft Windows 10.0.19045)
 >>
@@ -56,7 +56,7 @@ endobj
 %--------------------------------------------------------------------------------------------------
 5 0 obj   % PdfSharp.Pdf.Advanced.PdfContent
 <<
-  /Length 638
+  /Length 650
 >>
 stream
 q
@@ -85,7 +85,7 @@ S
 65.8622 -40.7267 67.7534 -45.2653 67.7534 -50 c
 67.7534 -59.8049 59.8049 -67.7534 50 -67.7534 c
 40.1951 -67.7534 32.2466 -59.8049 32.2466 -50 c
-32.2466 -50 32.2466 -50 32.2466 -50 c
+32.2466 -45.2653 34.1378 -40.7267 37.5 -37.3931 c
 S
 50 -20 m
 50 -20 l
@@ -136,12 +136,12 @@ stream
       </rdf:Description>
       <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
         <xmp:CreatorTool>PDFsharp 0.1.0 (www.pdfsharp.net)</xmp:CreatorTool>
-        <xmp:CreateDate>2024-08-06T12:58:38.9733796+02:00</xmp:CreateDate>
-        <xmp:ModifyDate>2024-08-06T12:58:38.9733796+02:00</xmp:ModifyDate>
+        <xmp:CreateDate>2024-09-04T18:57:17.2308007+02:00</xmp:CreateDate>
+        <xmp:ModifyDate>2024-09-04T18:57:17.2308007+02:00</xmp:ModifyDate>
       </rdf:Description>
       <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/">
-        <xmpMM:DocumentID>uuid:3d07e959-c483-4793-8695-8e1eb7f52e6e</xmpMM:DocumentID>
-        <xmpMM:InstanceID>uuid:c1971232-1289-40ba-a3d4-3c8cdfeeff74</xmpMM:InstanceID>
+        <xmpMM:DocumentID>uuid:b90a3f02-2709-409d-84f2-a25510d80329</xmpMM:DocumentID>
+        <xmpMM:InstanceID>uuid:9e0f7025-00a3-4289-88b3-e22cf14d7c01</xmpMM:InstanceID>
       </rdf:Description>
     </rdf:RDF>
   </x:xmpmeta>
@@ -157,16 +157,16 @@ xref
 0000001029 00000 n 
 0000001218 00000 n 
 0000001612 00000 n 
-0000002440 00000 n 
-0000002627 00000 n 
+0000002452 00000 n 
+0000002639 00000 n 
 trailer
 <<
-  /ID [<0568D33BF6B7B5469532A156A61E6E39><0568D33BF6B7B5469532A156A61E6E39>]
+  /ID [<E7CBC543D16AFB48B001F738200F6E07><E7CBC543D16AFB48B001F738200F6E07>]
   /Info 1 0 R
   /Root 2 0 R
   /Size 8
 >>
 % Created with PDFsharp 0.1.0 (CORE) under .NET 6.0
 startxref
-4289
+4301
 %%EOF

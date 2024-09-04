@@ -8,6 +8,7 @@ using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.IO;
+using System.Xml.Linq;
 
 namespace ACadSharp.Pdf
 {
@@ -50,7 +51,18 @@ namespace ACadSharp.Pdf
 			this._pdf = new PdfDocument(stream);
 		}
 
-		public void AddPage(Layout layout)
+		public void AddModelSpace()
+		{
+			this.AddModelSpace(this.Configuration.ReferenceDocument);
+		}
+
+		public void AddModelSpace(CadDocument document)
+		{
+			this.Add(document.ModelSpace);
+
+		}
+
+		public void Add(Layout layout)
 		{
 			if (!layout.IsPaperSpace)
 			{
@@ -68,7 +80,7 @@ namespace ACadSharp.Pdf
 			throw new NotImplementedException();
 		}
 
-		public void AddPage(BlockRecord block)
+		public void Add(BlockRecord block)
 		{
 			PdfPage page = this._pdf.AddPage();
 
@@ -78,13 +90,13 @@ namespace ACadSharp.Pdf
 
 			foreach (Entity e in block.Entities)
 			{
-				XPen pen = getDrawingPen(e);
+				XPen pen = this.getDrawingPen(e);
 
 				this.drawEntity(gfx, pen, e);
 				viewBox = viewBox.Merge(e.GetBoundingBox());
 			}
 
-			updateSize(page, gfx, viewBox);
+			this.updateSize(page, gfx, viewBox);
 		}
 
 		public void AddPage(BlockRecord block, PlotSettings settings)
@@ -92,11 +104,11 @@ namespace ACadSharp.Pdf
 			throw new NotImplementedException();
 		}
 
-		public void AddPages(CadDocument document)
+		public void AddLayouts(CadDocument document)
 		{
 			foreach (Objects.Layout layout in document.Layouts)
 			{
-				this.AddPage(layout);
+				this.Add(layout);
 			}
 		}
 
@@ -111,7 +123,7 @@ namespace ACadSharp.Pdf
 		/// <inheritdoc/>
 		public void Dispose()
 		{
-			_pdf.Dispose();
+			this._pdf.Dispose();
 		}
 
 		private XPen getDrawingPen(Entity entity)
@@ -158,7 +170,17 @@ namespace ACadSharp.Pdf
 
 		private void drawArc(XGraphics gfx, XPen pen, Arc arc)
 		{
-			gfx.DrawArc(pen, arc.GetBoundingBox().ToXRect(), MathUtils.RadToDeg(arc.StartAngle), MathUtils.RadToDeg(arc.EndAngle));
+			var start = MathUtils.RadToDeg(arc.StartAngle);
+			var end = MathUtils.RadToDeg(arc.EndAngle);
+
+			if (arc.EndAngle < arc.StartAngle)
+			{
+				gfx.DrawArc(pen, arc.GetBoundingBox().ToXRect(), start - 360, end + Math.Abs(start - 360));
+			}
+			else
+			{
+				gfx.DrawArc(pen, arc.GetBoundingBox().ToXRect(), start, end);
+			}
 		}
 
 		private void drawCircle(XGraphics gfx, XPen pen, Circle circle)
