@@ -13,6 +13,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp", "ACadSharp\src\ACadSharp\ACadSharp.csproj", "{954E6718-3377-4F1F-8487-6A9412829661}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp", "PdfSharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj", "{99A31D18-2FDD-46D5-81A1-788D3472E999}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp.System", "PdfSharp\src\foundation\src\shared\src\PdfSharp.System\PdfSharp.System.csproj", "{062E62B0-6B93-4D77-A20A-E2BE4568E152}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C208F917-1B3F-4D17-B07A-5DB997793705}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		..\.gitmodules = ..\.gitmodules
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{78F069B8-0EF8-4703-9257-CBF5DC4022FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{52E48994-8A32-45F5-BB03-1D578AD6457E}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
+		..\.github\workflows\build_n_test.yml = ..\.github\workflows\build_n_test.yml
+		..\.github\workflows\coveralls.yml = ..\.github\workflows\coveralls.yml
+		..\.github\workflows\publish.yml = ..\.github\workflows\publish.yml
+		..\.github\workflows\wiki-gen.yml = ..\.github\workflows\wiki-gen.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,12 +68,28 @@ Global
 		{954E6718-3377-4F1F-8487-6A9412829661}.Release|Any CPU.Build.0 = Release|Any CPU
 		{954E6718-3377-4F1F-8487-6A9412829661}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{954E6718-3377-4F1F-8487-6A9412829661}.Test|Any CPU.Build.0 = Test|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A31D18-2FDD-46D5-81A1-788D3472E999}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{954E6718-3377-4F1F-8487-6A9412829661} = {34398062-E8FA-40D9-876E-14DA65580159}
+		{99A31D18-2FDD-46D5-81A1-788D3472E999} = {34398062-E8FA-40D9-876E-14DA65580159}
+		{062E62B0-6B93-4D77-A20A-E2BE4568E152} = {34398062-E8FA-40D9-876E-14DA65580159}
+		{78F069B8-0EF8-4703-9257-CBF5DC4022FA} = {C208F917-1B3F-4D17-B07A-5DB997793705}
+		{52E48994-8A32-45F5-BB03-1D578AD6457E} = {78F069B8-0EF8-4703-9257-CBF5DC4022FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEC36C72-28D7-4685-A732-2964B45E36CF}
