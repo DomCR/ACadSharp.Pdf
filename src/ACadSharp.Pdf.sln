@@ -36,6 +36,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\wiki-gen.yml = ..\.github\workflows\wiki-gen.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACadSharp.Pdf.Tests", "ACadSharp.Pdf.Tests\ACadSharp.Pdf.Tests.csproj", "{0E7B7771-ABD9-4ABC-A626-7C73120248B9}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CSUtilities", "ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.shproj", "{7950B9CB-883D-4065-8FD0-9A6822BB2FE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +77,12 @@ Global
 		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Release|Any CPU.Build.0 = Release|Any CPU
 		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{062E62B0-6B93-4D77-A20A-E2BE4568E152}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{0E7B7771-ABD9-4ABC-A626-7C73120248B9}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,11 +93,14 @@ Global
 		{062E62B0-6B93-4D77-A20A-E2BE4568E152} = {34398062-E8FA-40D9-876E-14DA65580159}
 		{78F069B8-0EF8-4703-9257-CBF5DC4022FA} = {C208F917-1B3F-4D17-B07A-5DB997793705}
 		{52E48994-8A32-45F5-BB03-1D578AD6457E} = {78F069B8-0EF8-4703-9257-CBF5DC4022FA}
+		{7950B9CB-883D-4065-8FD0-9A6822BB2FE2} = {34398062-E8FA-40D9-876E-14DA65580159}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEC36C72-28D7-4685-A732-2964B45E36CF}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{0e7b7771-abd9-4abc-a626-7c73120248b9}*SharedItemsImports = 5
+		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{7950b9cb-883d-4065-8fd0-9a6822bb2fe2}*SharedItemsImports = 13
 		ACadSharp\src\CSUtilities\CSMath\CSMath.projitems*{954e6718-3377-4f1f-8487-6a9412829661}*SharedItemsImports = 5
 		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{954e6718-3377-4f1f-8487-6a9412829661}*SharedItemsImports = 5
 	EndGlobalSection
