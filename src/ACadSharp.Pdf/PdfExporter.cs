@@ -68,11 +68,6 @@ namespace ACadSharp.Pdf
 			throw new NotImplementedException();
 		}
 
-		public void AddPage(BlockRecord block, PlotSettings settings)
-		{
-			throw new NotImplementedException();
-		}
-
 		public void AddPage(BlockRecord block)
 		{
 			PdfPage page = this._pdf.AddPage();
@@ -90,6 +85,11 @@ namespace ACadSharp.Pdf
 			}
 
 			updateSize(page, gfx, viewBox);
+		}
+
+		public void AddPage(BlockRecord block, PlotSettings settings)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void AddPages(CadDocument document)
