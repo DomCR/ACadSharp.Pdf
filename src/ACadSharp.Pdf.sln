@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp", "ACadSharp\src\ACadSharp\ACadSharp.csproj", "{954E6718-3377-4F1F-8487-6A9412829661}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp", "PdfSharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj", "{99A31D18-2FDD-46D5-81A1-788D3472E999}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp", "PdfSharp-repo\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj", "{99A31D18-2FDD-46D5-81A1-788D3472E999}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp.System", "PdfSharp\src\foundation\src\shared\src\PdfSharp.System\PdfSharp.System.csproj", "{062E62B0-6B93-4D77-A20A-E2BE4568E152}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp.System", "PdfSharp-repo\src\foundation\src\shared\src\PdfSharp.System\PdfSharp.System.csproj", "{062E62B0-6B93-4D77-A20A-E2BE4568E152}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C208F917-1B3F-4D17-B07A-5DB997793705}"
 	ProjectSection(SolutionItems) = preProject
