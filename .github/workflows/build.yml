@@ -20,4 +20,4 @@ jobs:
       run: |
           git submodule update --force --recursive --init --remote
           dotnet restore
-          dotnet build --configuration Release --no-restore
+          dotnet build --configuration Debug --no-restore
