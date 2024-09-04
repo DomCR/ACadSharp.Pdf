@@ -18,5 +18,6 @@ jobs:
     - name: Restore dependencies and Build
       working-directory: src
       run: |
+          git submodule update --force --recursive --init --remote
           dotnet restore
           dotnet build --configuration Release --no-restore
