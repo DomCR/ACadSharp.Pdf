@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp.Pdf", "ACadSharp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp.Pdf.Examples", "ACadSharp.Pdf.Examples\ACadSharp.Pdf.Examples.csproj", "{3EE03679-BFA3-406D-B3F9-C343AC668FA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharp", "..\..\PDFsharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj", "{81C811FE-F5AB-43F9-B765-4260A2555C33}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{34398062-E8FA-40D9-876E-14DA65580159}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACadSharp", "ACadSharp\src\ACadSharp\ACadSharp.csproj", "{954E6718-3377-4F1F-8487-6A9412829661}"
@@ -56,12 +54,6 @@ Global
 		{3EE03679-BFA3-406D-B3F9-C343AC668FA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EE03679-BFA3-406D-B3F9-C343AC668FA2}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{3EE03679-BFA3-406D-B3F9-C343AC668FA2}.Test|Any CPU.Build.0 = Test|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{81C811FE-F5AB-43F9-B765-4260A2555C33}.Test|Any CPU.Build.0 = Release|Any CPU
 		{954E6718-3377-4F1F-8487-6A9412829661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{954E6718-3377-4F1F-8487-6A9412829661}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{954E6718-3377-4F1F-8487-6A9412829661}.Release|Any CPU.ActiveCfg = Release|Any CPU
