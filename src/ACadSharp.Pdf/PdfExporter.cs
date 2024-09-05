@@ -7,6 +7,8 @@ using CSMath;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
@@ -59,7 +61,24 @@ namespace ACadSharp.Pdf
 		public void AddModelSpace(CadDocument document)
 		{
 			this.Add(document.ModelSpace);
+		}
 
+		public void AddPaperSpaces()
+		{
+			this.AddPaperSpaces(this.Configuration.ReferenceDocument);
+		}
+
+		public void AddPaperSpaces(CadDocument document)
+		{
+			this.Add(document.Layouts);
+		}
+
+		public void Add(IEnumerable<Layout> layouts)
+		{
+			foreach (var layout in layouts)
+			{
+				this.Add(layout);
+			}
 		}
 
 		public void Add(Layout layout)
@@ -194,10 +213,17 @@ namespace ACadSharp.Pdf
 			gfx.DrawLine(pen, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y);
 		}
 
-		private void drawPoint(XGraphics gfx, XPen pen, Point line)
+		private void drawPoint(XGraphics gfx, XPen pen, Point point)
 		{
-			//Not working
-			gfx.DrawLine(pen, line.Location.X, line.Location.Y, line.Location.X, line.Location.Y);
+			//TODO: Fix point drawing
+			gfx.DrawLine(pen, point.Location.X, point.Location.Y, point.Location.X, point.Location.Y);
+			var box = point.GetBoundingBox();
+			box.Max = box.Max + new XYZ(1);
+			box.Min = box.Min - new XYZ(1);
+
+			XSolidBrush brush = new XSolidBrush();
+
+			gfx.DrawEllipse(pen, brush, box.ToXRect());
 		}
 
 		private void updateSize(PdfPage page, XGraphics gfx, BoundingBox box)

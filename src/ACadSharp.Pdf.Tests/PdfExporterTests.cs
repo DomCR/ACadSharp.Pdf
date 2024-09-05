@@ -21,6 +21,19 @@ namespace ACadSharp.Pdf.Tests
 			}
 		}
 
+		[Fact]
+		public void AddPaperSpaceTest()
+		{
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
+			using (PdfExporter exporter = new PdfExporter(filename))
+			{
+				exporter.Configuration.ReferenceDocument = this.getDocument();
+				exporter.AddPaperSpaces();
+
+				exporter.Close();
+			}
+		}
+
 		private CadDocument getDocument()
 		{
 			if (this._document == null)
