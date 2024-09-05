@@ -77,26 +77,63 @@ namespace ACadSharp.Pdf
 		{
 			foreach (var layout in layouts)
 			{
+				if (!layout.IsPaperSpace)
+				{
+					continue;
+				}
+
 				this.Add(layout);
 			}
 		}
 
 		public void Add(Layout layout)
 		{
-			if (!layout.IsPaperSpace)
+			PdfPage page = this._pdf.AddPage();
+			page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
+			page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
+
+			switch (layout.PaperRotation)
 			{
-				return;
+				case PlotRotation.NoRotation:
+					break;
+				case PlotRotation.Degrees90:
+					page.Rotate = 90;
+					break;
+				case PlotRotation.Degrees180:
+					page.Rotate = 180;
+					break;
+				case PlotRotation.Degrees270:
+					page.Rotate = 270;
+					break;
 			}
 
-			PdfPage page = this._pdf.AddPage();
-			page.Size = PdfSharp.PageSize.A0;
+			XGraphicsUnit unit;
+			switch (layout.PaperUnits)
+			{
+				case PlotPaperUnits.Inches:
+					unit = XGraphicsUnit.Inch;
+					break;
+				case PlotPaperUnits.Milimeters:
+					unit = XGraphicsUnit.Millimeter;
+					break;
+				case PlotPaperUnits.Pixels:
+					unit = XGraphicsUnit.Point;
+					break;
+				default:
+					unit = XGraphicsUnit.Point;
+					break;
+			}
+
+			XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
 
 			foreach (Viewport vp in layout.Viewports)
 			{
+				XPen pen = this.getDrawingPen(vp);
 
+				this.drawViewport(gfx, pen, vp);
 			}
 
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		public void Add(BlockRecord block)
@@ -215,7 +252,7 @@ namespace ACadSharp.Pdf
 
 		private void drawPoint(XGraphics gfx, XPen pen, Point point)
 		{
-			//TODO: Fix point drawing
+			//TODO: Fix point drawing, add weight
 			gfx.DrawLine(pen, point.Location.X, point.Location.Y, point.Location.X, point.Location.Y);
 			var box = point.GetBoundingBox();
 			box.Max = box.Max + new XYZ(1);
@@ -224,6 +261,14 @@ namespace ACadSharp.Pdf
 			XSolidBrush brush = new XSolidBrush();
 
 			gfx.DrawEllipse(pen, brush, box.ToXRect());
+		}
+
+		private void drawViewport(XGraphics gfx, XPen pen, Viewport vp)
+		{
+			//Inches to mm = 1 * 25.4
+
+			XRect rect = new XRect(vp.Center.X, vp.Center.Y, vp.Width, vp.Height);
+			gfx.DrawRectangle(pen, vp.GetBoundingBox().ToXRect());
 		}
 
 		private void updateSize(PdfPage page, XGraphics gfx, BoundingBox box)
