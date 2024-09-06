@@ -28,7 +28,22 @@ namespace ACadSharp.Pdf.Tests
 			using (PdfExporter exporter = new PdfExporter(filename))
 			{
 				exporter.Configuration.ReferenceDocument = this.getDocument();
-				exporter.AddPaperSpaces();
+				//exporter.AddPaperSpaces();
+				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
+
+				exporter.Close();
+			}
+		}
+
+		[Fact]
+		public void AddBlockTest()
+		{
+			CadDocument doc = this.getDocument();
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
+			using (PdfExporter exporter = new PdfExporter(filename))
+			{
+				exporter.Configuration.ReferenceDocument =doc;
+				exporter.Add(doc.Layouts["Layout1"]);
 
 				exporter.Close();
 			}

@@ -92,20 +92,26 @@ namespace ACadSharp.Pdf
 			page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
 			page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
 
-			switch (layout.PaperRotation)
+			if (layout.PaperRotation == PlotRotation.Degrees90)
 			{
-				case PlotRotation.NoRotation:
-					break;
-				case PlotRotation.Degrees90:
-					page.Rotate = 90;
-					break;
-				case PlotRotation.Degrees180:
-					page.Rotate = 180;
-					break;
-				case PlotRotation.Degrees270:
-					page.Rotate = 270;
-					break;
+				page.Orientation = PdfSharp.PageOrientation.Landscape;
 			}
+
+			//TODO: Fix rotation page to match with Layout config
+			//switch (layout.PaperRotation)
+			//{
+			//	case PlotRotation.NoRotation:
+			//		break;
+			//	case PlotRotation.Degrees90:
+			//		page.Rotate = 90;
+			//		break;
+			//	case PlotRotation.Degrees180:
+			//		page.Rotate = 180;
+			//		break;
+			//	case PlotRotation.Degrees270:
+			//		page.Rotate = 270;
+			//		break;
+			//}
 
 			XGraphicsUnit unit;
 			switch (layout.PaperUnits)
@@ -125,15 +131,29 @@ namespace ACadSharp.Pdf
 			}
 
 			XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
+			//gfx.PageUnit = unit;
+			//Draw paper entities
+			foreach (Entity e in layout.AssociatedBlock.Entities)
+			{
+				XPen pen = this.getDrawingPen(e);
+
+				if (e is Line)
+				{
+					this.drawEntity(gfx, pen, e);
+				}
+			}
 
 			foreach (Viewport vp in layout.Viewports)
 			{
+				if (vp.RepresentsPaper)
+				{
+					continue;
+				}
+
 				XPen pen = this.getDrawingPen(vp);
 
 				this.drawViewport(gfx, pen, vp);
 			}
-
-			//throw new NotImplementedException();
 		}
 
 		public void Add(BlockRecord block)
@@ -194,7 +214,7 @@ namespace ACadSharp.Pdf
 				color = entity.Color;
 			}
 
-			return new XPen(color.ToXColor(), 1);
+			return new XPen(color.ToXColor(), 0.05);
 		}
 
 		protected void notify(string message, NotificationType notificationType, Exception ex = null)
@@ -268,6 +288,10 @@ namespace ACadSharp.Pdf
 			//Inches to mm = 1 * 25.4
 
 			XRect rect = new XRect(vp.Center.X, vp.Center.Y, vp.Width, vp.Height);
+
+			var b = vp.GetBoundingBox();
+			var r = b.ToXRect();
+
 			gfx.DrawRectangle(pen, vp.GetBoundingBox().ToXRect());
 		}
 
