@@ -97,6 +97,11 @@ namespace ACadSharp.Pdf
 				page.Orientation = PdfSharp.PageOrientation.Landscape;
 			}
 
+			//TODO: Setup margins
+			//page.TrimMargins.Bottom = new XUnit(layout.UnprintableMargin.Bottom);
+			//page.TrimMargins.Right = new XUnit(10, XGraphicsUnit.Millimeter);
+			//page.TrimMargins.All = new XUnit(10, XGraphicsUnit.Millimeter);
+
 			//TODO: Fix rotation page to match with Layout config
 			//switch (layout.PaperRotation)
 			//{
@@ -131,6 +136,7 @@ namespace ACadSharp.Pdf
 			}
 
 			XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
+			
 			//gfx.PageUnit = unit;
 			//Draw paper entities
 			foreach (Entity e in layout.AssociatedBlock.Entities)
