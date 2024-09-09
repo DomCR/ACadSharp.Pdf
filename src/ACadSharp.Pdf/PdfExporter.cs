@@ -1,11 +1,8 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.IO;
 using ACadSharp.Objects;
-using ACadSharp.Pdf.Extensions;
 using ACadSharp.Tables;
 using CSMath;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,12 +26,8 @@ namespace ACadSharp.Pdf
 
 		public PdfExporterConfiguration Configuration { get; } = new PdfExporterConfiguration();
 
-		public PdfDocumentInformation Information
-		{
-			get { return this._pdf.Info; }
-		}
-
 		private readonly PdfDocument _pdf;
+		private readonly Stream _stream;
 
 		/// <summary>
 		/// Initialize an instance of <see cref="PdfExporter"/>.
@@ -50,7 +43,8 @@ namespace ACadSharp.Pdf
 		/// <param name="stream">Stream where the pdf will be saved.</param>
 		public PdfExporter(Stream stream)
 		{
-			this._pdf = new PdfDocument(stream);
+			this._stream = stream;
+			this._pdf = new PdfDocument();
 		}
 
 		public void AddModelSpace()
@@ -88,97 +82,88 @@ namespace ACadSharp.Pdf
 
 		public void Add(Layout layout)
 		{
-			PdfPage page = this._pdf.AddPage();
-			page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
-			page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
+			//PdfPage page = this._pdf.AddPage();
+			//page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
+			//page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
 
-			if (layout.PaperRotation == PlotRotation.Degrees90)
-			{
-				page.Orientation = PdfSharp.PageOrientation.Landscape;
-			}
-
-			//TODO: Setup margins
-			//page.TrimMargins.Bottom = new XUnit(layout.UnprintableMargin.Bottom);
-			//page.TrimMargins.Right = new XUnit(10, XGraphicsUnit.Millimeter);
-			//page.TrimMargins.All = new XUnit(10, XGraphicsUnit.Millimeter);
-
-			//TODO: Fix rotation page to match with Layout config
-			//switch (layout.PaperRotation)
+			//if (layout.PaperRotation == PlotRotation.Degrees90)
 			//{
-			//	case PlotRotation.NoRotation:
+			//	page.Orientation = PdfSharp.PageOrientation.Landscape;
+			//}
+
+			////TODO: Setup margins
+			////page.TrimMargins.Bottom = new XUnit(layout.UnprintableMargin.Bottom);
+			////page.TrimMargins.Right = new XUnit(10, XGraphicsUnit.Millimeter);
+			////page.TrimMargins.All = new XUnit(10, XGraphicsUnit.Millimeter);
+
+			////TODO: Fix rotation page to match with Layout config
+			////switch (layout.PaperRotation)
+			////{
+			////	case PlotRotation.NoRotation:
+			////		break;
+			////	case PlotRotation.Degrees90:
+			////		page.Rotate = 90;
+			////		break;
+			////	case PlotRotation.Degrees180:
+			////		page.Rotate = 180;
+			////		break;
+			////	case PlotRotation.Degrees270:
+			////		page.Rotate = 270;
+			////		break;
+			////}
+
+			//XGraphicsUnit unit;
+			//switch (layout.PaperUnits)
+			//{
+			//	case PlotPaperUnits.Inches:
+			//		unit = XGraphicsUnit.Inch;
 			//		break;
-			//	case PlotRotation.Degrees90:
-			//		page.Rotate = 90;
+			//	case PlotPaperUnits.Milimeters:
+			//		unit = XGraphicsUnit.Millimeter;
 			//		break;
-			//	case PlotRotation.Degrees180:
-			//		page.Rotate = 180;
+			//	case PlotPaperUnits.Pixels:
+			//		unit = XGraphicsUnit.Point;
 			//		break;
-			//	case PlotRotation.Degrees270:
-			//		page.Rotate = 270;
+			//	default:
+			//		unit = XGraphicsUnit.Point;
 			//		break;
 			//}
 
-			XGraphicsUnit unit;
-			switch (layout.PaperUnits)
-			{
-				case PlotPaperUnits.Inches:
-					unit = XGraphicsUnit.Inch;
-					break;
-				case PlotPaperUnits.Milimeters:
-					unit = XGraphicsUnit.Millimeter;
-					break;
-				case PlotPaperUnits.Pixels:
-					unit = XGraphicsUnit.Point;
-					break;
-				default:
-					unit = XGraphicsUnit.Point;
-					break;
-			}
+			//XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
 
-			XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
-			
-			//gfx.PageUnit = unit;
-			//Draw paper entities
-			foreach (Entity e in layout.AssociatedBlock.Entities)
-			{
-				XPen pen = this.getDrawingPen(e);
+			////gfx.PageUnit = unit;
+			////Draw paper entities
+			//foreach (Entity e in layout.AssociatedBlock.Entities)
+			//{
+			//	XPen pen = this.getDrawingPen(e);
 
-				if (e is Line)
-				{
-					this.drawEntity(gfx, pen, e);
-				}
-			}
+			//	if (e is Line)
+			//	{
+			//		this.drawEntity(gfx, pen, e);
+			//	}
+			//}
 
-			foreach (Viewport vp in layout.Viewports)
-			{
-				if (vp.RepresentsPaper)
-				{
-					continue;
-				}
+			//foreach (Viewport vp in layout.Viewports)
+			//{
+			//	if (vp.RepresentsPaper)
+			//	{
+			//		continue;
+			//	}
 
-				XPen pen = this.getDrawingPen(vp);
+			//	XPen pen = this.getDrawingPen(vp);
 
-				this.drawViewport(gfx, pen, vp);
-			}
+			//	this.drawViewport(gfx, pen, vp);
+			//}
 		}
 
 		public void Add(BlockRecord block)
 		{
-			PdfPage page = this._pdf.AddPage();
-
-			BoundingBox viewBox = BoundingBox.Null;
-			XGraphics gfx = XGraphics.FromPdfPage(page);
-			gfx.PageDirection = XPageDirection.Upwards;
+			PdfPage page = this._pdf.Pages.AddPage();
 
 			foreach (Entity e in block.Entities)
 			{
-				XPen pen = this.getDrawingPen(e);
-
-				this.drawEntity(gfx, pen, e);
-				viewBox = viewBox.Merge(e.GetBoundingBox());
+				page.Entities.Add(e);
 			}
-
-			this.updateSize(page, gfx, viewBox);
 		}
 
 		public void AddPage(BlockRecord block, PlotSettings settings)
@@ -199,120 +184,21 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public void Close()
 		{
-			this._pdf.Close();
+			using (PdfWriter writer = new PdfWriter(this._stream, _pdf))
+			{
+				writer.Write();
+			}
 		}
 
 		/// <inheritdoc/>
 		public void Dispose()
 		{
-			this._pdf.Dispose();
-		}
-
-		private XPen getDrawingPen(Entity entity)
-		{
-			Color color;
-			if (entity.Color.IsByLayer)
-			{
-				color = entity.Color;
-			}
-			else
-			{
-				color = entity.Color;
-			}
-
-			return new XPen(color.ToXColor(), 0.05);
+			//this._pdf.Dispose();
 		}
 
 		protected void notify(string message, NotificationType notificationType, Exception ex = null)
 		{
 			this.OnNotification?.Invoke(this, new NotificationEventArgs(message, notificationType, ex));
-		}
-
-		private void drawEntity(XGraphics gfx, XPen pen, Entity entity)
-		{
-			switch (entity)
-			{
-				case Arc arc:
-					this.drawArc(gfx, pen, arc);
-					break;
-				case Circle circle:
-					this.drawCircle(gfx, pen, circle);
-					break;
-				case Line line:
-					this.drawLine(gfx, pen, line);
-					break;
-				case Point point:
-					this.drawPoint(gfx, pen, point);
-					break;
-				default:
-					this.notify($"Entity {entity.SubclassMarker} not implemented.", NotificationType.NotImplemented);
-					break;
-			}
-		}
-
-		private void drawArc(XGraphics gfx, XPen pen, Arc arc)
-		{
-			var start = MathUtils.RadToDeg(arc.StartAngle);
-			var end = MathUtils.RadToDeg(arc.EndAngle);
-
-			if (arc.EndAngle < arc.StartAngle)
-			{
-				gfx.DrawArc(pen, arc.GetBoundingBox().ToXRect(), start - 360, end + Math.Abs(start - 360));
-			}
-			else
-			{
-				gfx.DrawArc(pen, arc.GetBoundingBox().ToXRect(), start, end);
-			}
-		}
-
-		private void drawCircle(XGraphics gfx, XPen pen, Circle circle)
-		{
-			var box = circle.GetBoundingBox();
-			gfx.DrawEllipse(pen, box.ToXRect());
-		}
-
-		private void drawLine(XGraphics gfx, XPen pen, Line line)
-		{
-			gfx.DrawLine(pen, line.StartPoint.X, line.StartPoint.Y, line.EndPoint.X, line.EndPoint.Y);
-		}
-
-		private void drawPoint(XGraphics gfx, XPen pen, Point point)
-		{
-			//TODO: Fix point drawing, add weight
-			gfx.DrawLine(pen, point.Location.X, point.Location.Y, point.Location.X, point.Location.Y);
-			var box = point.GetBoundingBox();
-			box.Max = box.Max + new XYZ(1);
-			box.Min = box.Min - new XYZ(1);
-
-			XSolidBrush brush = new XSolidBrush();
-
-			gfx.DrawEllipse(pen, brush, box.ToXRect());
-		}
-
-		private void drawViewport(XGraphics gfx, XPen pen, Viewport vp)
-		{
-			//Inches to mm = 1 * 25.4
-
-			XRect rect = new XRect(vp.Center.X, vp.Center.Y, vp.Width, vp.Height);
-
-			var b = vp.GetBoundingBox();
-			var r = b.ToXRect();
-
-			gfx.DrawRectangle(pen, vp.GetBoundingBox().ToXRect());
-		}
-
-		private void updateSize(PdfPage page, XGraphics gfx, BoundingBox box)
-		{
-			if (box.Extent == BoundingBoxExtent.Infinite ||
-				box.Extent == BoundingBoxExtent.Null)
-			{
-				return;
-			}
-
-			page.Width = new XUnit(box.Max.X);
-			page.Height = new XUnit(box.Max.Y);
-
-			//gfx.TranslateTransform(box.Min.X, box.Max.Y);
 		}
 	}
 }
