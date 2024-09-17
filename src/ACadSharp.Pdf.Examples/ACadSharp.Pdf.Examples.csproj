@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ACadSharp.Pdf\ACadSharp.Pdf.csproj" />
+    <ProjectReference Include="..\PdfSharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj" />
   </ItemGroup>
 
 </Project>

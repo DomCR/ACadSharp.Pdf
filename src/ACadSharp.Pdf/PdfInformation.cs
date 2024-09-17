@@ -46,7 +46,7 @@ namespace ACadSharp.Pdf
 			this.Title = string.Empty;
 			this.Author = string.Empty;
 			this.Creator = "ACadSharp.Pdf";
-			this.CreationDate = DateTime.Now.ToString(); 
+			this.CreationDate = DateTime.Now.ToString();
 		}
 
 		protected string getValue([CallerMemberName] string name = null)

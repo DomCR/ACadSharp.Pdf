@@ -82,7 +82,15 @@ namespace ACadSharp.Pdf
 
 		public void Add(Layout layout)
 		{
-			//PdfPage page = this._pdf.AddPage();
+			PdfPage page = this._pdf.Pages.AddPage();
+
+			page.Layout = layout;
+
+			foreach (Entity e in layout.AssociatedBlock.Entities)
+			{
+				page.Entities.Add(e);
+			}
+
 			//page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
 			//page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
 

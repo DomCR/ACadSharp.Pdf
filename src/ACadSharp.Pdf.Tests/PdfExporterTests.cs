@@ -28,7 +28,6 @@ namespace ACadSharp.Pdf.Tests
 			using (PdfExporter exporter = new PdfExporter(filename))
 			{
 				exporter.Configuration.ReferenceDocument = this.getDocument();
-				//exporter.AddPaperSpaces();
 				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
 
 				exporter.Close();
