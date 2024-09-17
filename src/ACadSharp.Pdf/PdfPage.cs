@@ -60,11 +60,6 @@ namespace ACadSharp.Pdf
 			this.Items.Add("/MediaBox", mediaBox);
 		}
 
-		public override string GetStringForm()
-		{
-			return base.GetStringForm();
-		}
-
 		public override void SetId(ref int currNumber)
 		{
 			base.SetId(ref currNumber);

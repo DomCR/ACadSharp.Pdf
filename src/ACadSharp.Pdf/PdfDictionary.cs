@@ -11,16 +11,25 @@ namespace ACadSharp.Pdf
 		{
 			StringBuilder str = new StringBuilder();
 
-			str.AppendLine($"{this.Id} 0 obj");
-
-			str.Append(getDictinaryForm());
-
-			str.AppendLine("endobj");
+			str.Append(this.getStartObj());
+			str.Append(this.getBody());
+			str.Append(this.getEndObj());
 
 			return str.ToString();
 		}
 
-		protected string getDictinaryForm()
+		protected string getStartObj()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendLine($"% {this.GetType().FullName}");
+
+			sb.AppendLine($"{this.Id} 0 obj");
+
+			return sb.ToString();
+		}
+
+		protected string getBody()
 		{
 			StringBuilder str = new StringBuilder();
 
@@ -32,6 +41,16 @@ namespace ACadSharp.Pdf
 			str.AppendLine(">>");
 
 			return str.ToString();
+		}
+
+		protected string getEndObj()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendLine(PdfKey.EndObj);
+			sb.AppendLine(PdfKey.CommentSeparator);
+
+			return sb.ToString();
 		}
 	}
 }

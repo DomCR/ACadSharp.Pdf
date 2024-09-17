@@ -22,14 +22,37 @@ namespace ACadSharp.Pdf
 
 		public override string GetStringForm()
 		{
+			string drawing = this.getDrawingString();
+
+			StringBuilder str = new StringBuilder();
+			str.Append(getStartObj());
+			str.Append(this.getBody());
+			str.Append(drawing);
+			str.Append(this.getEndObj());
+
+			return str.ToString();
+		}
+
+		private string getDrawingString()
+		{
 			StringBuilder drawing = new StringBuilder();
-			drawing.AppendLine("stream");
+
+			drawing.AppendLine(PdfKey.StreamStart);
+
+			//Stack
 			drawing.AppendLine("q");
 			//Bottom left is 0,0
+
+			//translation
+			//1 0 0 1 tx ty cm
+			//scaling
+			//sx 0 0 xy 0 0 cm
+			//rotation - clockwise
+			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
 			drawing.AppendLine("1 0 0 1 0 0 cm");
 			drawing.AppendLine("q");
 
-			drawing.AppendLine("1 w");
+			drawing.AppendLine($"1 {PdfKey.LineWidth}");
 
 			drawReferenceCross(drawing);
 
@@ -38,20 +61,15 @@ namespace ACadSharp.Pdf
 				this.drawLine(drawing, item);
 			}
 
+			//Reset stack
 			drawing.AppendLine("Q");
 			drawing.AppendLine("Q");
 
-			drawing.AppendLine("endstream");
+			drawing.AppendLine(PdfKey.StreamEnd);
 
 			Stream.Write(Encoding.Default.GetBytes(drawing.ToString()));
 
-			StringBuilder str = new StringBuilder();
-			str.AppendLine($"{this.Id} 0 obj");
-			str.Append(this.getDictinaryForm());
-			str.Append(drawing);
-			str.AppendLine("endobj");
-
-			return str.ToString();
+			return drawing.ToString();
 		}
 
 		private void drawReferenceCross(StringBuilder str)
