@@ -13,6 +13,7 @@ namespace ACadSharp.Pdf.Examples
 		{
 			PdfSharpExamples.HelloWorld(Path.Combine(_outFolder, "PdfSharp", "helloworld.pdf"));
 			PdfSharpExamples.Landscape(Path.Combine(_outFolder, "PdfSharp", "Landscape.pdf"));
+			PdfSharpExamples.DrawDiagonal(Path.Combine(_outFolder, "PdfSharp", "Diagonal.pdf"));
 
 			return;
 

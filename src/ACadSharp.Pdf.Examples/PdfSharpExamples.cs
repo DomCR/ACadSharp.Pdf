@@ -53,5 +53,23 @@ namespace Example
 			// Save the document...
 			document.Save(filename);
 		}
+
+		public static void DrawDiagonal(string filename)
+		{
+			PdfDocument document = new PdfDocument();
+
+			PdfPage page = document.AddPage();
+			page.Height = new XUnit(10, XGraphicsUnit.Inch);
+			page.Width = new XUnit(10, XGraphicsUnit.Inch);
+
+			var pen = new XPen(XColor.FromArgb(125, 0, 0), 0.05);
+
+			XGraphics gfx = XGraphics.FromPdfPage(page);
+
+			gfx.DrawLine(pen, 1, 2, page.Width.Point / 2, page.Height.Point / 2);
+
+			// Save the document...
+			document.Save(filename);
+		}
 	}
 }

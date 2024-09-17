@@ -86,56 +86,24 @@ namespace ACadSharp.Pdf
 
 			page.Layout = layout;
 
-			foreach (Entity e in layout.AssociatedBlock.Entities)
-			{
-				page.Entities.Add(e);
-			}
-
-			//page.Width = new XUnit(layout.PaperWidth, XGraphicsUnit.Millimeter);
-			//page.Height = new XUnit(layout.PaperHeight, XGraphicsUnit.Millimeter);
-
-			//if (layout.PaperRotation == PlotRotation.Degrees90)
-			//{
-			//	page.Orientation = PdfSharp.PageOrientation.Landscape;
-			//}
+			page.Layout.PaperWidth = 100;
+			page.Layout.PaperHeight = 100;
 
 			////TODO: Setup margins
 			////page.TrimMargins.Bottom = new XUnit(layout.UnprintableMargin.Bottom);
 			////page.TrimMargins.Right = new XUnit(10, XGraphicsUnit.Millimeter);
 			////page.TrimMargins.All = new XUnit(10, XGraphicsUnit.Millimeter);
 
-			////TODO: Fix rotation page to match with Layout config
-			////switch (layout.PaperRotation)
-			////{
-			////	case PlotRotation.NoRotation:
-			////		break;
-			////	case PlotRotation.Degrees90:
-			////		page.Rotate = 90;
-			////		break;
-			////	case PlotRotation.Degrees180:
-			////		page.Rotate = 180;
-			////		break;
-			////	case PlotRotation.Degrees270:
-			////		page.Rotate = 270;
-			////		break;
-			////}
+			//TODO: Fix rotation page to match with Layout config
+			//if (layout.PaperRotation == PlotRotation.Degrees90)
 
-			//XGraphicsUnit unit;
+			//TODO: handle paper units
 			//switch (layout.PaperUnits)
-			//{
-			//	case PlotPaperUnits.Inches:
-			//		unit = XGraphicsUnit.Inch;
-			//		break;
-			//	case PlotPaperUnits.Milimeters:
-			//		unit = XGraphicsUnit.Millimeter;
-			//		break;
-			//	case PlotPaperUnits.Pixels:
-			//		unit = XGraphicsUnit.Point;
-			//		break;
-			//	default:
-			//		unit = XGraphicsUnit.Point;
-			//		break;
-			//}
+
+			foreach (Entity e in layout.AssociatedBlock.Entities)
+			{
+				page.Entities.Add(e);
+			}
 
 			//XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
 

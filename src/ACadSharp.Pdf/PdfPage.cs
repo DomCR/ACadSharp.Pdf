@@ -38,7 +38,7 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public List<Entity> Entities { get; } = new();
 
-		public PdfPageContent Contents { get; set; } = new();
+		public PdfPageContent Contents { get; }
 
 		private readonly PdfPages _parent;
 
@@ -48,6 +48,8 @@ namespace ACadSharp.Pdf
 
 			this.Items.Add("/Type", new PdfName("/Page"));
 			this.Items.Add("/Parent", this._parent.Reference);
+
+			this.Contents = new PdfPageContent(this);
 			this.Items.Add("/Contents", this.Contents.Reference);
 
 			PdfArray<PdfReference<double>> mediaBox = new();
@@ -56,6 +58,11 @@ namespace ACadSharp.Pdf
 			mediaBox.Add(new PdfReference<double>(() => this.Width));
 			mediaBox.Add(new PdfReference<double>(() => this.Height));
 			this.Items.Add("/MediaBox", mediaBox);
+		}
+
+		public override string GetStringForm()
+		{
+			return base.GetStringForm();
 		}
 
 		public override void SetId(ref int currNumber)
