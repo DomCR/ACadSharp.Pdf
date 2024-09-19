@@ -1,6 +1,6 @@
 ﻿using ACadSharp.Entities;
-using System;
-using System.IO;
+using ACadSharp.Objects;
+using ACadSharp.Pdf.Extensions;
 using System.Linq;
 using System.Text;
 
@@ -8,24 +8,26 @@ namespace ACadSharp.Pdf
 {
 	public class PdfPageContent : PdfDictionary
 	{
-		public Stream Stream { get; set; }
+		public StringBuilder ContentString { get; }
 
 		public PdfPage Owner { get; }
+
+		public Layout Layout { get { return this.Owner.Layout; } }
 
 		public PdfPageContent(PdfPage owner)
 		{
 			this.Owner = owner;
 
-			this.Stream = new MemoryStream();
-			this.Items.Add("/Length", new PdfReference<long>(() => this.Stream.Length));
+			this.ContentString = new StringBuilder();
+			this.Items.Add("/Length", new PdfReference<long>(() => this.ContentString.Length));
 		}
 
 		public override string GetStringForm()
 		{
-			string drawing = this.getDrawingString();
+			string drawing = this.createDrawingString();
 
 			StringBuilder str = new StringBuilder();
-			str.Append(getStartObj());
+			str.Append(this.getStartObj());
 			str.Append(this.getBody());
 			str.Append(drawing);
 			str.Append(this.getEndObj());
@@ -33,14 +35,16 @@ namespace ACadSharp.Pdf
 			return str.ToString();
 		}
 
-		private string getDrawingString()
+		private string createDrawingString()
 		{
-			StringBuilder drawing = new StringBuilder();
+			this.ContentString.Clear();
 
-			drawing.AppendLine(PdfKey.StreamStart);
+			this.ContentString.AppendLine(PdfKey.StreamStart);
+
+			this.drawReferenceCross(this.ContentString);
 
 			//Stack
-			drawing.AppendLine("q");
+			this.ContentString.AppendLine("q");
 			//Bottom left is 0,0
 
 			//translation
@@ -49,39 +53,75 @@ namespace ACadSharp.Pdf
 			//sx 0 0 xy 0 0 cm
 			//rotation - clockwise
 			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
-			drawing.AppendLine("1 0 0 1 0 0 cm");
-			drawing.AppendLine("q");
+			double xt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Left);
+			double yt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Bottom);
 
-			drawing.AppendLine($"1 {PdfKey.LineWidth}");
+			this.ContentString.AppendLine($"1 0 0 1 {xt} {yt} cm");
+			this.ContentString.AppendLine("q");
 
-			drawReferenceCross(drawing);
+			this.ContentString.AppendLine($"1 {PdfKey.LineWidth}");
 
 			foreach (Entities.Line item in this.Owner.Entities.OfType<Line>())
 			{
-				this.drawLine(drawing, item);
+				this.drawLine(item);
 			}
 
 			//Reset stack
-			drawing.AppendLine("Q");
-			drawing.AppendLine("Q");
+			this.ContentString.AppendLine("Q");
+			this.ContentString.AppendLine("Q");
 
-			drawing.AppendLine(PdfKey.StreamEnd);
+			this.ContentString.AppendLine(PdfKey.StreamEnd);
 
-			Stream.Write(Encoding.Default.GetBytes(drawing.ToString()));
-
-			return drawing.ToString();
+			return this.ContentString.ToString();
 		}
 
 		private void drawReferenceCross(StringBuilder str)
 		{
+			//Reference method
+			str.AppendLine("0.5 w");
+			str.AppendLine("1 0 0 RG");
+
 			str.AppendLine("0 0 m");
-			str.AppendLine("100 100 l");
+			str.AppendLine($"{this.Owner.Width} {this.Owner.Height} l");
+			str.AppendLine("S");
+
+			str.AppendLine($"0 {this.Owner.Height} m");
+			str.AppendLine($"{this.Owner.Width} 0 l");
 			str.AppendLine("S");
 		}
 
-		private void drawLine(StringBuilder str, Line item)
+		private void applyStyle(Entity entity)
 		{
+			switch (entity.LineWeight)
+			{
+				case LineweightType.ByDIPs:
+					break;
+				case LineweightType.Default:
+					break;
+				case LineweightType.ByBlock:
+					break;
+				case LineweightType.ByLayer:
+					break;
+				default:
+					break;
+			}
+
+
+		}
+
+		private void drawLine(Line line)
+		{
+			this.applyStyle(line);
+
 			//set transform
+			this.ContentString.AppendLine($"{this.toPdfDouble(line.StartPoint.X)} {this.toPdfDouble(line.StartPoint.Y)} m");
+			ContentString.AppendLine($"{this.toPdfDouble(line.EndPoint.X)} {this.toPdfDouble(line.EndPoint.Y)} l");
+			ContentString.AppendLine("S");
+		}
+
+		private string toPdfDouble(double value)
+		{
+			return value.ToPdfUnit(this.Layout.PaperUnits).ToString("0.####");
 		}
 	}
 }

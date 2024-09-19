@@ -1,5 +1,6 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
+using ACadSharp.Pdf.Extensions;
 using System.Collections.Generic;
 
 namespace ACadSharp.Pdf
@@ -13,7 +14,16 @@ namespace ACadSharp.Pdf
 		{
 			get
 			{
-				return PdfUnitType.Millimeter.ToUnit(this.Layout.PaperWidth);
+				switch (this.Layout.PaperRotation)
+				{
+					case PlotRotation.Degrees90:
+					case PlotRotation.Degrees270:
+						return PdfUnitType.Millimeter.Transform(this.Layout.PaperHeight);
+					case PlotRotation.NoRotation:
+					case PlotRotation.Degrees180:
+					default:
+						return PdfUnitType.Millimeter.Transform(this.Layout.PaperWidth);
+				}
 			}
 		}
 
@@ -24,7 +34,16 @@ namespace ACadSharp.Pdf
 		{
 			get
 			{
-				return PdfUnitType.Millimeter.ToUnit(this.Layout.PaperHeight);
+				switch (this.Layout.PaperRotation)
+				{
+					case PlotRotation.Degrees90:
+					case PlotRotation.Degrees270:
+						return PdfUnitType.Millimeter.Transform(this.Layout.PaperWidth);
+					case PlotRotation.NoRotation:
+					case PlotRotation.Degrees180:
+					default:
+						return PdfUnitType.Millimeter.Transform(this.Layout.PaperHeight);
+				}
 			}
 		}
 
@@ -37,6 +56,8 @@ namespace ACadSharp.Pdf
 		/// Entities to draw in the page.
 		/// </summary>
 		public List<Entity> Entities { get; } = new();
+
+		public List<Viewport> Viewports { get; } = new();
 
 		public PdfPageContent Contents { get; }
 

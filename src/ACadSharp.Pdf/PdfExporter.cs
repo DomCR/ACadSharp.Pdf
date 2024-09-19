@@ -86,50 +86,20 @@ namespace ACadSharp.Pdf
 
 			page.Layout = layout;
 
-			page.Layout.PaperWidth = 100;
-			page.Layout.PaperHeight = 100;
-
-			////TODO: Setup margins
-			////page.TrimMargins.Bottom = new XUnit(layout.UnprintableMargin.Bottom);
-			////page.TrimMargins.Right = new XUnit(10, XGraphicsUnit.Millimeter);
-			////page.TrimMargins.All = new XUnit(10, XGraphicsUnit.Millimeter);
-
-			//TODO: Fix rotation page to match with Layout config
-			//if (layout.PaperRotation == PlotRotation.Degrees90)
-
-			//TODO: handle paper units
-			//switch (layout.PaperUnits)
-
 			foreach (Entity e in layout.AssociatedBlock.Entities)
 			{
 				page.Entities.Add(e);
 			}
 
-			//XGraphics gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append, unit, XPageDirection.Upwards);
+			foreach (Viewport vp in layout.Viewports)
+			{
+				if (vp.RepresentsPaper)
+				{
+					continue;
+				}
 
-			////gfx.PageUnit = unit;
-			////Draw paper entities
-			//foreach (Entity e in layout.AssociatedBlock.Entities)
-			//{
-			//	XPen pen = this.getDrawingPen(e);
-
-			//	if (e is Line)
-			//	{
-			//		this.drawEntity(gfx, pen, e);
-			//	}
-			//}
-
-			//foreach (Viewport vp in layout.Viewports)
-			//{
-			//	if (vp.RepresentsPaper)
-			//	{
-			//		continue;
-			//	}
-
-			//	XPen pen = this.getDrawingPen(vp);
-
-			//	this.drawViewport(gfx, pen, vp);
-			//}
+				page.Viewports.Add(vp);
+			}
 		}
 
 		public void Add(BlockRecord block)

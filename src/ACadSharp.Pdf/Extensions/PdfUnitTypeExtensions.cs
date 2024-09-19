@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Extensions
 {
 	public static class PdfUnitTypeExtensions
 	{
-		public static double ToUnit(this PdfUnitType type, double value)
+		public static double Transform(this PdfUnitType type, double value)
 		{
 			return type switch
 			{
