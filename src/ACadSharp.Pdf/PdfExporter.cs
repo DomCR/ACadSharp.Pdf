@@ -91,14 +91,14 @@ namespace ACadSharp.Pdf
 				page.Entities.Add(e);
 			}
 
-			foreach (Viewport vp in layout.Viewports)
+			foreach (ViewPort vp in layout.Viewports)
 			{
 				if (vp.RepresentsPaper)
 				{
 					continue;
 				}
 
-				page.Viewports.Add(vp);
+				page.Entities.Add(vp);
 			}
 		}
 
@@ -106,10 +106,7 @@ namespace ACadSharp.Pdf
 		{
 			PdfPage page = this._pdf.Pages.AddPage();
 
-			foreach (Entity e in block.Entities)
-			{
-				page.Entities.Add(e);
-			}
+			page.Add(block);
 		}
 
 		public void AddPage(BlockRecord block, PlotSettings settings)

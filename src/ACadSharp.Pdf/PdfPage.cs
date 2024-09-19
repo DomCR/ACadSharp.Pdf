@@ -1,7 +1,10 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
+using ACadSharp.Tables;
+using CSMath;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ACadSharp.Pdf
 {
@@ -57,8 +60,6 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public List<Entity> Entities { get; } = new();
 
-		public List<Viewport> Viewports { get; } = new();
-
 		public PdfPageContent Contents { get; }
 
 		private readonly PdfPages _parent;
@@ -86,6 +87,35 @@ namespace ACadSharp.Pdf
 			base.SetId(ref currNumber);
 
 			this.Contents.SetId(ref currNumber);
+		}
+
+		/// <summary>
+		/// Add the block record to the page.
+		/// </summary>
+		/// <param name="block"></param>
+		/// <param name="resizeLayout">Resize the layout to fit all the current entities.</param>
+		/// <exception cref="System.NotImplementedException"></exception>
+		public void Add(BlockRecord block, bool resizeLayout = true)
+		{
+			this.Entities.AddRange(block.Entities);
+
+			if (resizeLayout)
+			{
+				this.UpdateLayoutSize();
+			}
+		}
+
+		/// <summary>
+		/// Update the layout size to fit all the entities in the view.
+		/// </summary>
+		public void UpdateLayoutSize()
+		{
+			BoundingBox limits = BoundingBox.Merge(this.Entities.Select(e => e.GetBoundingBox()));
+
+			limits = limits.Move(-limits.Min);
+
+			this.Layout.PaperWidth = limits.Max.X;
+			this.Layout.PaperHeight = limits.Max.Y;
 		}
 	}
 }

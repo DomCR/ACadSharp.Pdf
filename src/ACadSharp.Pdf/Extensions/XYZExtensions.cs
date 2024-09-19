@@ -22,7 +22,7 @@ namespace ACadSharp.Pdf.Extensions
 				case PlotPaperUnits.Inches:
 					return PdfUnitType.Inch.Transform(value);
 				case PlotPaperUnits.Milimeters:
-					return PdfUnitType.Inch.Transform(value);
+					return PdfUnitType.Millimeter.Transform(value);
 				case PlotPaperUnits.Pixels:
 				default:
 					return PdfUnitType.Point.Transform(value);
