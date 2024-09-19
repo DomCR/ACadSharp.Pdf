@@ -1,20 +1,23 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
+using CSMath;
 using System.Linq;
 using System.Text;
 
 namespace ACadSharp.Pdf
 {
-	public class PdfPageContent : PdfDictionary
+	public class PdfContent : PdfDictionary
 	{
+		public XY Translation { get; set; } = XY.Zero;
+
 		public StringBuilder ContentString { get; }
 
 		public PdfPage Owner { get; }
 
 		public Layout Layout { get { return this.Owner.Layout; } }
 
-		public PdfPageContent(PdfPage owner)
+		public PdfContent(PdfPage owner)
 		{
 			this.Owner = owner;
 
@@ -53,9 +56,8 @@ namespace ACadSharp.Pdf
 			//sx 0 0 xy 0 0 cm
 			//rotation - clockwise
 			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
-			double xt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Left);
-			double yt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Bottom);
 
+			this.getTotalTranslation(out double xt, out double yt);
 			this.ContentString.AppendLine($"1 0 0 1 {xt} {yt} cm");
 			this.ContentString.AppendLine("q");
 
@@ -73,6 +75,15 @@ namespace ACadSharp.Pdf
 			this.ContentString.AppendLine(PdfKey.StreamEnd);
 
 			return this.ContentString.ToString();
+		}
+
+		private void getTotalTranslation(out double xt, out double yt)
+		{
+			xt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Left);
+			yt = PdfUnitType.Millimeter.Transform(this.Layout.UnprintableMargin.Bottom);
+
+			xt += PdfUnitType.Millimeter.Transform(this.Translation.X);
+			yt += PdfUnitType.Millimeter.Transform(this.Translation.Y);
 		}
 
 		private void drawReferenceCross(StringBuilder str)

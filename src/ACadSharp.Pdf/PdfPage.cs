@@ -60,7 +60,7 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public List<Entity> Entities { get; } = new();
 
-		public PdfPageContent Contents { get; }
+		public PdfContent Contents { get; }
 
 		private readonly PdfPages _parent;
 
@@ -71,7 +71,7 @@ namespace ACadSharp.Pdf
 			this.Items.Add("/Type", new PdfName("/Page"));
 			this.Items.Add("/Parent", this._parent.Reference);
 
-			this.Contents = new PdfPageContent(this);
+			this.Contents = new PdfContent(this);
 			this.Items.Add("/Contents", this.Contents.Reference);
 
 			PdfArray<PdfReference<double>> mediaBox = new();
@@ -111,6 +111,8 @@ namespace ACadSharp.Pdf
 		public void UpdateLayoutSize()
 		{
 			BoundingBox limits = BoundingBox.Merge(this.Entities.Select(e => e.GetBoundingBox()));
+
+			this.Contents.Translation = -(XY)limits.Min;
 
 			limits = limits.Move(-limits.Min);
 
