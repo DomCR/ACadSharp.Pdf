@@ -117,7 +117,22 @@ namespace ACadSharp.Pdf
 					break;
 			}
 
+			Color color = default;
+			if (entity.Color.IsByLayer)
+			{
+				color = entity.Layer.Color;
+			}
+			else
+			{
+				color = entity.Color;
+			}
 
+			if (color.Index == 7)
+			{
+				color = new Color(0, 0, 0);
+			}
+
+			this.ContentString.AppendLine(color.ToPdfString());
 		}
 
 		private void drawLine(Line line)
