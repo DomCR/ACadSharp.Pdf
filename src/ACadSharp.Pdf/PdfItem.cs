@@ -6,7 +6,7 @@
 
 		public string Name { get; set; }
 
-		public abstract string GetStringForm();
+		public abstract string GetPdfForm(PdfExporterConfiguration configuration);
 
 		public virtual void SetId(ref int currNumber)
 		{

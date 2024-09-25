@@ -4,6 +4,9 @@
 	{
 		public const string CommentSeparator = "%--------------------------------";
 
+		public const string StackStart = "q";
+		public const string StackEnd = "Q";
+
 		public const string Stroke = "S";
 		public const string Fill = "f";
 		public const string LineWidth = "w";

@@ -2,7 +2,6 @@
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
-using System.Linq;
 using System.Text;
 
 namespace ACadSharp.Pdf
@@ -11,27 +10,26 @@ namespace ACadSharp.Pdf
 	{
 		public XY Translation { get; set; } = XY.Zero;
 
-		public StringBuilder ContentString { get; }
-
 		public PdfPage Owner { get; }
 
 		public Layout Layout { get { return this.Owner.Layout; } }
+
+		private readonly StringBuilder _sb = new();
 
 		public PdfContent(PdfPage owner)
 		{
 			this.Owner = owner;
 
-			this.ContentString = new StringBuilder();
-			this.Items.Add("/Length", new PdfReference<long>(() => this.ContentString.Length));
+			this.Items.Add("/Length", new PdfReference<long>(() => this._sb.Length));
 		}
 
-		public override string GetStringForm()
+		public override string GetPdfForm(PdfExporterConfiguration configuration)
 		{
 			string drawing = this.createDrawingString();
 
 			StringBuilder str = new StringBuilder();
 			str.Append(this.getStartObj());
-			str.Append(this.getBody());
+			str.Append(this.getBody(configuration));
 			str.Append(drawing);
 			str.Append(this.getEndObj());
 
@@ -40,14 +38,30 @@ namespace ACadSharp.Pdf
 
 		private string createDrawingString()
 		{
-			this.ContentString.Clear();
+			this._sb.Clear();
 
-			this.ContentString.AppendLine(PdfKey.StreamStart);
+			this._sb.AppendLine(PdfKey.StreamStart);
 
-			this.drawReferenceCross(this.ContentString);
+			this.writeStackStart();
 
+			this._sb.AppendLine($"1 {PdfKey.LineWidth}");
+
+			foreach (Entity e in this.Owner.Entities)
+			{
+				this.drawEntity(e);
+			}
+
+			this.writeStackEnd();
+
+			this._sb.AppendLine(PdfKey.StreamEnd);
+
+			return this._sb.ToString();
+		}
+
+		private void writeStackStart()
+		{
 			//Stack
-			this.ContentString.AppendLine("q");
+			this._sb.AppendLine(PdfKey.StackStart);
 			//Bottom left is 0,0
 
 			//translation
@@ -58,23 +72,15 @@ namespace ACadSharp.Pdf
 			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
 
 			this.getTotalTranslation(out double xt, out double yt);
-			this.ContentString.AppendLine($"1 0 0 1 {xt} {yt} cm");
-			this.ContentString.AppendLine("q");
+			this._sb.AppendLine($"1 0 0 1 {xt} {yt} cm");
+			this._sb.AppendLine(PdfKey.StackStart);
+		}
 
-			this.ContentString.AppendLine($"1 {PdfKey.LineWidth}");
-
-			foreach (Entities.Line item in this.Owner.Entities.OfType<Line>())
-			{
-				this.drawLine(item);
-			}
-
+		private void writeStackEnd()
+		{
 			//Reset stack
-			this.ContentString.AppendLine("Q");
-			this.ContentString.AppendLine("Q");
-
-			this.ContentString.AppendLine(PdfKey.StreamEnd);
-
-			return this.ContentString.ToString();
+			this._sb.AppendLine("Q");
+			this._sb.AppendLine("Q");
 		}
 
 		private void getTotalTranslation(out double xt, out double yt)
@@ -101,17 +107,31 @@ namespace ACadSharp.Pdf
 			str.AppendLine("S");
 		}
 
+		private void drawEntity(Entity entity)
+		{
+			this.applyStyle(entity);
+
+			switch (entity)
+			{
+				case Line line:
+					this.drawLine(line);
+					break;
+				default:
+					break;
+			}
+		}
+
 		private void applyStyle(Entity entity)
 		{
 			switch (entity.LineWeight)
 			{
-				case LineweightType.ByDIPs:
+				case LineWeightType.ByDIPs:
 					break;
-				case LineweightType.Default:
+				case LineWeightType.Default:
 					break;
-				case LineweightType.ByBlock:
+				case LineWeightType.ByBlock:
 					break;
-				case LineweightType.ByLayer:
+				case LineWeightType.ByLayer:
 					break;
 				default:
 					break;
@@ -132,17 +152,15 @@ namespace ACadSharp.Pdf
 				color = new Color(0, 0, 0);
 			}
 
-			this.ContentString.AppendLine(color.ToPdfString());
+			this._sb.AppendLine(color.ToPdfString());
 		}
 
 		private void drawLine(Line line)
 		{
-			this.applyStyle(line);
-
 			//set transform
-			this.ContentString.AppendLine($"{this.toPdfDouble(line.StartPoint.X)} {this.toPdfDouble(line.StartPoint.Y)} m");
-			ContentString.AppendLine($"{this.toPdfDouble(line.EndPoint.X)} {this.toPdfDouble(line.EndPoint.Y)} l");
-			ContentString.AppendLine("S");
+			this._sb.AppendLine($"{this.toPdfDouble(line.StartPoint.X)} {this.toPdfDouble(line.StartPoint.Y)} m");
+			_sb.AppendLine($"{this.toPdfDouble(line.EndPoint.X)} {this.toPdfDouble(line.EndPoint.Y)} l");
+			_sb.AppendLine("S");
 		}
 
 		private string toPdfDouble(double value)

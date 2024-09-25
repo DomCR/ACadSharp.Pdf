@@ -9,7 +9,7 @@
 			this._value = type;
 		}
 
-		public override string GetStringForm()
+		public override string GetPdfForm(PdfExporterConfiguration configuration)
 		{
 			return _value;
 		}

@@ -7,12 +7,12 @@ namespace ACadSharp.Pdf
 	{
 		public Dictionary<string, PdfItem> Items { get; set; } = new();
 
-		public override string GetStringForm()
+		public override string GetPdfForm(PdfExporterConfiguration configuration)
 		{
 			StringBuilder str = new StringBuilder();
 
 			str.Append(this.getStartObj());
-			str.Append(this.getBody());
+			str.Append(this.getBody(configuration));
 			str.Append(this.getEndObj());
 
 			return str.ToString();
@@ -29,14 +29,14 @@ namespace ACadSharp.Pdf
 			return sb.ToString();
 		}
 
-		protected string getBody()
+		protected string getBody(PdfExporterConfiguration configuration)
 		{
 			StringBuilder str = new StringBuilder();
 
 			str.AppendLine("<<");
 			foreach (var item in this.Items)
 			{
-				str.AppendLine($"{item.Key} {item.Value.GetStringForm()}");
+				str.AppendLine($"{item.Key} {item.Value.GetPdfForm(configuration)}");
 			}
 			str.AppendLine(">>");
 

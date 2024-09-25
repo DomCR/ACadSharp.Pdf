@@ -21,13 +21,13 @@ namespace ACadSharp.Pdf
 			this.Items.Add(item);
 		}
 
-		public override string GetStringForm()
+		public override string GetPdfForm(PdfExporterConfiguration configuration)
 		{
 			StringBuilder sb = new StringBuilder();
 
 			sb.Append("[");
 
-			sb.AppendJoin(' ', this.Items.Select(i => i.GetStringForm()));
+			sb.AppendJoin(' ', this.Items.Select(i => i.GetPdfForm(configuration)));
 
 			sb.Append("]");
 

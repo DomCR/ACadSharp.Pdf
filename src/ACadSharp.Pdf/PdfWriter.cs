@@ -12,12 +12,15 @@ namespace ACadSharp.Pdf
 		private Encoding _encoding = Encoding.ASCII;
 		private Stream _stream;
 		private PdfDocument _document;
+		private PdfExporterConfiguration _configuration;
+
 		private List<long> _xrefs = new();
 
-		public PdfWriter(Stream stream, PdfDocument document)
+		public PdfWriter(Stream stream, PdfDocument document, PdfExporterConfiguration configuration)
 		{
 			_stream = stream;
 			_document = document;
+			_configuration = configuration;
 		}
 
 		public void Write()
@@ -54,6 +57,7 @@ namespace ACadSharp.Pdf
 			this.write("%%EOF");
 		}
 
+		/// <inheritdoc/>
 		public void Dispose()
 		{
 			this._stream.Dispose();
@@ -74,7 +78,7 @@ namespace ACadSharp.Pdf
 		private void writePdfDictionary(PdfDictionary dict)
 		{
 			this._xrefs.Add(this._stream.Position);
-			this.write(dict.GetStringForm());
+			this.write(dict.GetPdfForm(this._configuration));
 		}
 
 		private long writeXRef()

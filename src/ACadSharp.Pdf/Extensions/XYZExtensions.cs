@@ -1,7 +1,6 @@
 ﻿using ACadSharp.Objects;
 using CSMath;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace ACadSharp.Pdf.Extensions
 {

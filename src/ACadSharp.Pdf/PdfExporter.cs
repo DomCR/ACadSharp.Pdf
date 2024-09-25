@@ -127,7 +127,7 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public void Close()
 		{
-			using (PdfWriter writer = new PdfWriter(this._stream, _pdf))
+			using (PdfWriter writer = new PdfWriter(this._stream, this._pdf, this.Configuration))
 			{
 				writer.Write();
 			}
