@@ -1,12 +1,19 @@
 using ACadSharp.IO;
 using System.IO;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ACadSharp.Pdf.Tests
 {
 	public class PdfExporterTests
 	{
 		private CadDocument _document;
+		private readonly ITestOutputHelper _output;
+
+		public PdfExporterTests(ITestOutputHelper output)
+		{
+			this._output = output;
+		}
 
 		[Fact]
 		public void AddModelSpaceTest()
@@ -14,6 +21,8 @@ namespace ACadSharp.Pdf.Tests
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
 			using (PdfExporter exporter = new PdfExporter(filename))
 			{
+				exporter.Configuration.OnNotification += this.exporter_OnNotification;
+
 				exporter.Configuration.ReferenceDocument = this.getDocument();
 				exporter.AddModelSpace();
 
@@ -41,7 +50,7 @@ namespace ACadSharp.Pdf.Tests
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
 			using (PdfExporter exporter = new PdfExporter(filename))
 			{
-				exporter.Configuration.ReferenceDocument =doc;
+				exporter.Configuration.ReferenceDocument = doc;
 				exporter.Add(doc.Layouts["Layout1"]);
 
 				exporter.Close();
@@ -55,6 +64,12 @@ namespace ACadSharp.Pdf.Tests
 				this._document = DwgReader.Read(Path.Combine(TestVariables.SamplesFolder, "export_sample.dwg"));
 			}
 			return this._document;
+		}
+
+
+		private void exporter_OnNotification(object sender, NotificationEventArgs e)
+		{
+			this._output.WriteLine(e.Message);
 		}
 	}
 }

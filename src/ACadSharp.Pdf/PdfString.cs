@@ -9,7 +9,7 @@
 			this._value = value;
 		}
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
 			return $"({this._value})";
 		}

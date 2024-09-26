@@ -2,12 +2,9 @@
 using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Tables;
-using CSMath;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 
 namespace ACadSharp.Pdf
 {
@@ -16,15 +13,7 @@ namespace ACadSharp.Pdf
 	/// </summary>
 	public class PdfExporter : IDisposable
 	{
-		/// <summary>
-		/// Notification event to get information about the export process.
-		/// </summary>
-		/// <remarks>
-		/// The notification system informs about any issue or non critical errors during the export.
-		/// </remarks>
-		public event NotificationEventHandler OnNotification;
-
-		public PdfExporterConfiguration Configuration { get; } = new PdfExporterConfiguration();
+		public PdfConfiguration Configuration { get; } = new PdfConfiguration();
 
 		private readonly PdfDocument _pdf;
 		private readonly Stream _stream;
@@ -137,11 +126,6 @@ namespace ACadSharp.Pdf
 		public void Dispose()
 		{
 			//this._pdf.Dispose();
-		}
-
-		protected void notify(string message, NotificationType notificationType, Exception ex = null)
-		{
-			this.OnNotification?.Invoke(this, new NotificationEventArgs(message, notificationType, ex));
 		}
 	}
 }

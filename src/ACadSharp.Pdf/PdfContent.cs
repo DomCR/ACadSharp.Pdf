@@ -1,5 +1,6 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
+using ACadSharp.Pdf.Core.IO;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
 using System.Text;
@@ -23,9 +24,9 @@ namespace ACadSharp.Pdf
 			this.Items.Add("/Length", new PdfReference<long>(() => this._sb.Length));
 		}
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
-			string drawing = this.createDrawingString();
+			string drawing = this.createDrawingString(configuration);
 
 			StringBuilder str = new StringBuilder();
 			str.Append(this.getStartObj());
@@ -36,8 +37,11 @@ namespace ACadSharp.Pdf
 			return str.ToString();
 		}
 
-		private string createDrawingString()
+		private string createDrawingString(PdfConfiguration configuration)
 		{
+			PdfPen pen = new PdfPen(configuration);
+			pen.PaperUnits = Layout.PaperUnits;
+
 			this._sb.Clear();
 
 			this._sb.AppendLine(PdfKey.StreamStart);
@@ -48,8 +52,10 @@ namespace ACadSharp.Pdf
 
 			foreach (Entity e in this.Owner.Entities)
 			{
-				this.drawEntity(e);
+				pen.DrawEntity(e);
 			}
+
+			this._sb.Append(pen.ToString());
 
 			this.writeStackEnd();
 
@@ -72,7 +78,7 @@ namespace ACadSharp.Pdf
 			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
 
 			this.getTotalTranslation(out double xt, out double yt);
-			this._sb.AppendLine($"1 0 0 1 {xt} {yt} cm");
+			this._sb.AppendLine($"1 0 0 1 {xt} {yt} {PdfKey.CurrentMatrix}");
 			this._sb.AppendLine(PdfKey.StackStart);
 		}
 
@@ -92,31 +98,20 @@ namespace ACadSharp.Pdf
 			yt += PdfUnitType.Millimeter.Transform(this.Translation.Y);
 		}
 
-		private void drawReferenceCross(StringBuilder str)
-		{
-			//Reference method
-			str.AppendLine("0.5 w");
-			str.AppendLine("1 0 0 RG");
-
-			str.AppendLine("0 0 m");
-			str.AppendLine($"{this.Owner.Width} {this.Owner.Height} l");
-			str.AppendLine("S");
-
-			str.AppendLine($"0 {this.Owner.Height} m");
-			str.AppendLine($"{this.Owner.Width} 0 l");
-			str.AppendLine("S");
-		}
-
-		private void drawEntity(Entity entity)
+		private void drawEntity(Entity entity, PdfConfiguration configuration)
 		{
 			this.applyStyle(entity);
 
 			switch (entity)
 			{
+				case Circle circle:
+					this.drawCircle(circle);
+					break;
 				case Line line:
 					this.drawLine(line);
 					break;
 				default:
+					configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", IO.NotificationType.NotImplemented);
 					break;
 			}
 		}
@@ -155,12 +150,16 @@ namespace ACadSharp.Pdf
 			this._sb.AppendLine(color.ToPdfString());
 		}
 
+		private void drawCircle(Circle circle)
+		{
+
+		}
+
 		private void drawLine(Line line)
 		{
-			//set transform
-			this._sb.AppendLine($"{this.toPdfDouble(line.StartPoint.X)} {this.toPdfDouble(line.StartPoint.Y)} m");
-			_sb.AppendLine($"{this.toPdfDouble(line.EndPoint.X)} {this.toPdfDouble(line.EndPoint.Y)} l");
-			_sb.AppendLine("S");
+			this._sb.AppendLine($"{this.toPdfDouble(line.StartPoint.X)} {this.toPdfDouble(line.StartPoint.Y)} {PdfKey.BeginPath}");
+			_sb.AppendLine($"{this.toPdfDouble(line.EndPoint.X)} {this.toPdfDouble(line.EndPoint.Y)} {PdfKey.Line}");
+			_sb.AppendLine(PdfKey.Stroke);
 		}
 
 		private string toPdfDouble(double value)

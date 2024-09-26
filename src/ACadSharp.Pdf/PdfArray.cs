@@ -21,7 +21,7 @@ namespace ACadSharp.Pdf
 			this.Items.Add(item);
 		}
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
 			StringBuilder sb = new StringBuilder();
 

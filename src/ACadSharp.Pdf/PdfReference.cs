@@ -18,7 +18,7 @@ namespace ACadSharp.Pdf
 			Console.WriteLine(_f());
 		}
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
 			return this._f.Invoke().ToString();
 		}

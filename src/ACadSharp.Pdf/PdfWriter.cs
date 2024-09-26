@@ -12,11 +12,11 @@ namespace ACadSharp.Pdf
 		private Encoding _encoding = Encoding.ASCII;
 		private Stream _stream;
 		private PdfDocument _document;
-		private PdfExporterConfiguration _configuration;
+		private PdfConfiguration _configuration;
 
 		private List<long> _xrefs = new();
 
-		public PdfWriter(Stream stream, PdfDocument document, PdfExporterConfiguration configuration)
+		public PdfWriter(Stream stream, PdfDocument document, PdfConfiguration configuration)
 		{
 			_stream = stream;
 			_document = document;

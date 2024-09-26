@@ -9,7 +9,7 @@
 			this.Value = value;
 		}
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
 			return $"{this.Value.Id} 0 R";
 		}

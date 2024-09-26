@@ -14,6 +14,7 @@ namespace ACadSharp.Pdf.Examples
 			PdfSharpExamples.HelloWorld(Path.Combine(_outFolder, "PdfSharp", "helloworld.pdf"));
 			PdfSharpExamples.Landscape(Path.Combine(_outFolder, "PdfSharp", "Landscape.pdf"));
 			PdfSharpExamples.DrawDiagonal(Path.Combine(_outFolder, "PdfSharp", "Diagonal.pdf"));
+			PdfSharpExamples.DrawCircle(Path.Combine(_outFolder, "PdfSharp", "Circel.pdf"));
 
 			return;
 
@@ -23,7 +24,7 @@ namespace ACadSharp.Pdf.Examples
 
 			PdfExporter exporter = new PdfExporter(filename);
 
-			exporter.OnNotification += NotificationHelper.LogConsoleNotification;
+			//exporter.OnNotification += NotificationHelper.LogConsoleNotification;
 
 			exporter.Add(doc.ModelSpace);
 

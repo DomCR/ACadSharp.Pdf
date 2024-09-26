@@ -7,7 +7,7 @@ namespace ACadSharp.Pdf
 	{
 		public Dictionary<string, PdfItem> Items { get; set; } = new();
 
-		public override string GetPdfForm(PdfExporterConfiguration configuration)
+		public override string GetPdfForm(PdfConfiguration configuration)
 		{
 			StringBuilder str = new StringBuilder();
 
@@ -29,7 +29,7 @@ namespace ACadSharp.Pdf
 			return sb.ToString();
 		}
 
-		protected string getBody(PdfExporterConfiguration configuration)
+		protected string getBody(PdfConfiguration configuration)
 		{
 			StringBuilder str = new StringBuilder();
 

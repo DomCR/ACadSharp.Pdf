@@ -71,5 +71,25 @@ namespace Example
 			// Save the document...
 			document.Save(filename);
 		}
+
+		public static void DrawCircle(string filename)
+		{
+			PdfDocument document = new PdfDocument();
+
+			PdfPage page = document.AddPage();
+			page.Height = new XUnit(10, XGraphicsUnit.Inch);
+			page.Width = new XUnit(10, XGraphicsUnit.Inch);
+
+			var pen = new XPen(XColor.FromArgb(125, 0, 0), 0.5);
+
+			XGraphics gfx = XGraphics.FromPdfPage(page);
+
+			XRect rect = new XRect(0, 0, 500, 500);
+			gfx.DrawEllipse(pen, rect);
+			gfx.DrawEllipse(pen, 5, 5, 500, 500);
+
+			// Save the document...
+			document.Save(filename);
+		}
 	}
 }
