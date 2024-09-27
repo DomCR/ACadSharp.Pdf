@@ -141,7 +141,7 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private string toPdfDouble(double value)
 		{
-			return value.ToPdfUnit(this.PaperUnits).ToString("0.####");
+			return value.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
 		}
 	}
 }

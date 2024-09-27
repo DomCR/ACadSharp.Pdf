@@ -12,6 +12,28 @@ namespace ACadSharp.Pdf
 			{ LineWeightType.Default, 0 },
 			{ LineWeightType.W0, 0.001 },
 			{ LineWeightType.W5, 0.05 },
+			{ LineWeightType.W9, 0.09 },
+			{ LineWeightType.W13, 0.13 },
+			{ LineWeightType.W15, 0.15 },
+			{ LineWeightType.W18, 0.18 },
+			{ LineWeightType.W20, 0.20 },
+			{ LineWeightType.W25, 0.25 },
+			{ LineWeightType.W30, 0.30 },
+			{ LineWeightType.W35, 0.35 },
+			{ LineWeightType.W40, 0.40 },
+			{ LineWeightType.W50, 0.50 },
+			{ LineWeightType.W53, 0.53 },
+			{ LineWeightType.W60, 0.60 },
+			{ LineWeightType.W70, 0.70 },
+			{ LineWeightType.W80, 0.80 },
+			{ LineWeightType.W90, 0.90 },
+			{ LineWeightType.W100, 1.00 },
+			{ LineWeightType.W106, 1.06 },
+			{ LineWeightType.W120, 1.20 },
+			{ LineWeightType.W140, 1.40 },
+			{ LineWeightType.W158, 1.58 },
+			{ LineWeightType.W200, 2.00 },
+			{ LineWeightType.W211, 2.11 },
 		};
 
 		/// <summary>
@@ -21,6 +43,8 @@ namespace ACadSharp.Pdf
 		/// The notification system informs about any issue or non critical errors during the export.
 		/// </remarks>
 		public event NotificationEventHandler OnNotification;
+
+		public string DecimalFormat { get; set; } = "0.####";
 
 		public CadDocument ReferenceDocument { get; set; }
 
