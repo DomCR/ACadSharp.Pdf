@@ -36,6 +36,8 @@ namespace ACadSharp.Pdf
 			{ LineWeightType.W211, 2.11 },
 		};
 
+		public double DotSize { get; set; } = 0.1d;
+
 		/// <summary>
 		/// Notification event to get information about the export process.
 		/// </summary>

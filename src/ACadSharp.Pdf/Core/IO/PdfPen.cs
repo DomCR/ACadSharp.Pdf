@@ -96,6 +96,11 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(color.ToPdfString());
 		}
 
+		private void drawArc(Arc arc)
+		{
+
+		}
+
 		private void drawCircle(Circle circle)
 		{
 			BoundingBox rect = circle.GetBoundingBox();
@@ -128,7 +133,11 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawPoint(Point point)
 		{
+			double diff = this._configuration.DotSize / 2;
+			XYZ p = point.Location - new XYZ(diff);
 
+			this._sb.AppendLine($"{this.toPdfDouble(p.X)} {this.toPdfDouble(p.Y)} {this.toPdfDouble(this._configuration.DotSize)} {this.toPdfDouble(this._configuration.DotSize)} re");
+			this._sb.AppendLine($"F");
 		}
 
 		private void drawPolyline(IPolyline polyline)
