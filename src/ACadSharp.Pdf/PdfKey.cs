@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Intrinsics.X86;
-
-namespace ACadSharp.Pdf
+﻿namespace ACadSharp.Pdf
 {
 	public static class PdfKey
 	{

@@ -80,7 +80,7 @@ namespace ACadSharp.Pdf
 				page.Entities.Add(e);
 			}
 
-			foreach (ViewPort vp in layout.Viewports)
+			foreach (Viewport vp in layout.Viewports)
 			{
 				if (vp.RepresentsPaper)
 				{

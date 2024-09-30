@@ -34,6 +34,7 @@ namespace ACadSharp.Pdf.Core.IO
 			switch (entity)
 			{
 				case Arc arc:
+					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
 				case Circle circle:
 					this.drawCircle(circle);
@@ -41,6 +42,15 @@ namespace ACadSharp.Pdf.Core.IO
 				case Line line:
 					this.drawLine(line);
 					break;
+				case Point point:
+					this.drawPoint(point);
+					break;
+				case IPolyline polyline:
+					this.drawPolyline(polyline);
+					break;
+				//case Viewport viewport:
+				//	this.drawViewport(viewport);
+				//	break;
 				default:
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
@@ -116,17 +126,51 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
+		private void drawPoint(Point point)
+		{
+
+		}
+
+		private void drawPolyline(IPolyline polyline)
+		{
+			this.appendXY(polyline.Vertices.First().Location, PdfKey.BeginPath);
+
+			for (int i = 1; polyline.Vertices.Count() > i; i++)
+			{
+				this.appendXY(polyline.Vertices.ElementAt(i).Location, PdfKey.Line);
+			}
+
+
+			if (polyline.IsClosed)
+			{
+				this.appendXY(polyline.Vertices.Last().Location, PdfKey.Line);
+				this.appendXY(polyline.Vertices.First().Location, PdfKey.Line);
+			}
+			else
+			{
+				this.appendXY(polyline.Vertices.Last().Location, PdfKey.Stroke);
+			}
+		}
+
+		private void drawViewport(Viewport viewport)
+		{
+
+		}
+
 		private void appendArray(string key, params double[] arr)
 		{
 			this._sb.AppendJoin(" ", arr.Select(d => this.toPdfDouble(d)));
 			this._sb.AppendLine($" {key}");
-
-			var a = this._sb.ToString();
 		}
 
 		private void appendXY(double x, double y, string key)
 		{
 			this._sb.AppendLine($"{this.toPdfDouble(x)} {this.toPdfDouble(y)} {key}");
+		}
+
+		private void appendXY(IVector value, string key)
+		{
+			this.appendXY(value[0], value[1], key);
 		}
 
 		private void appendXY(XY value, string key)
