@@ -1,22 +1,27 @@
 using ACadSharp.IO;
 using System.IO;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ACadSharp.Pdf.Tests
 {
 	public class PdfExporterTests
 	{
 		private CadDocument _document;
+		private readonly ITestOutputHelper _output;
+
+		public PdfExporterTests(ITestOutputHelper output)
+		{
+			this._output = output;
+		}
 
 		[Fact]
 		public void AddModelSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
-			using (PdfExporter exporter = new PdfExporter(filename))
+			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
 			{
-				exporter.Configuration.ReferenceDocument = this.getDocument();
 				exporter.AddModelSpace();
-
 				exporter.Close();
 			}
 		}
@@ -25,12 +30,9 @@ namespace ACadSharp.Pdf.Tests
 		public void AddPaperSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
-			using (PdfExporter exporter = new PdfExporter(filename))
+			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
 			{
-				exporter.Configuration.ReferenceDocument = this.getDocument();
-				//exporter.AddPaperSpaces();
 				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
-
 				exporter.Close();
 			}
 		}
@@ -38,15 +40,22 @@ namespace ACadSharp.Pdf.Tests
 		[Fact]
 		public void AddBlockTest()
 		{
-			CadDocument doc = this.getDocument();
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
-			using (PdfExporter exporter = new PdfExporter(filename))
+			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
 			{
-				exporter.Configuration.ReferenceDocument =doc;
-				exporter.Add(doc.Layouts["Layout1"]);
-
+				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
 				exporter.Close();
 			}
+		}
+
+		private PdfExporter getPdfExporter(string path, CadDocument document)
+		{
+			PdfExporter exporter = new PdfExporter(path);
+
+			exporter.Configuration.OnNotification += this.onNotification;
+			exporter.Configuration.ReferenceDocument = document;
+
+			return exporter;
 		}
 
 		private CadDocument getDocument()
@@ -56,6 +65,11 @@ namespace ACadSharp.Pdf.Tests
 				this._document = DwgReader.Read(Path.Combine(TestVariables.SamplesFolder, "export_sample.dwg"));
 			}
 			return this._document;
+		}
+
+		private void onNotification(object sender, NotificationEventArgs e)
+		{
+			this._output.WriteLine(e.Message);
 		}
 	}
 }

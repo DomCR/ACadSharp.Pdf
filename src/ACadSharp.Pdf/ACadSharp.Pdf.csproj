@@ -12,7 +12,6 @@
 
 	<ItemGroup Condition="'$(Configuration)' != 'Release'">
 		<ProjectReference Include="..\ACadSharp\src\ACadSharp\ACadSharp.csproj" />
-		<ProjectReference Include="..\PdfSharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">

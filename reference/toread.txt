@@ -1,0 +1,10 @@
+Example PDF Files pag 707
+    - Graphics example
+
+8.4 Graphic State
+8.4.3.2 Line Width
+8.4.4 Graphics state Operators
+    - q - graphic stack
+    - Q - restore graphic stack
+
+8.6.8 Colour operators
