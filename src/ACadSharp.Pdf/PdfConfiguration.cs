@@ -36,8 +36,6 @@ namespace ACadSharp.Pdf
 			{ LineWeightType.W211, 2.11 },
 		};
 
-		public double DotSize { get; set; } = 0.1d;
-
 		/// <summary>
 		/// Notification event to get information about the export process.
 		/// </summary>
@@ -46,11 +44,35 @@ namespace ACadSharp.Pdf
 		/// </remarks>
 		public event NotificationEventHandler OnNotification;
 
+		/// <summary>
+		/// Set the dot size.
+		/// </summary>
+		/// <remarks>
+		/// The units used to draw the points are the same as the paper.
+		/// </remarks>
+		public double DotSize { get; set; } = 0.1d;
+
+		public ushort ArcPrecision { get; set; } = 100;
+
+		public short DotShape { get; set; }
+
 		public string DecimalFormat { get; set; } = "0.####";
 
 		public CadDocument ReferenceDocument { get; set; }
 
 		public Dictionary<LineWeightType, double> LineWeightValues { get; set; } = new();
+
+		public double GetLineWeightValue(LineWeightType lineWeight)
+		{
+			double value = 0.0d;
+			if (this.LineWeightValues.TryGetValue(lineWeight, out value)
+				|| LineWeightDefaultValues.TryGetValue(lineWeight, out value))
+			{
+				return value;
+			}
+
+			return value;
+		}
 
 		internal void Notify(string message, NotificationType notificationType, Exception ex = null)
 		{

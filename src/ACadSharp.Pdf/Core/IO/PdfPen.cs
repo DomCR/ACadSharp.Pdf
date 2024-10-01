@@ -34,7 +34,7 @@ namespace ACadSharp.Pdf.Core.IO
 			switch (entity)
 			{
 				case Arc arc:
-					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
+					this.drawArc(arc);
 					break;
 				case Circle circle:
 					this.drawCircle(circle);
@@ -64,21 +64,22 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void applyStyle(Entity entity)
 		{
+			LineWeightType lw = LineWeightType.Default;
 			switch (entity.LineWeight)
 			{
 				case LineWeightType.ByDIPs:
 					break;
-				case LineWeightType.Default:
-					break;
 				case LineWeightType.ByBlock:
 					break;
 				case LineWeightType.ByLayer:
-					break;
-				default:
+					lw = entity.Layer.LineWeight;
 					break;
 			}
 
-			Color color = default;
+			double lwValue = this._configuration.GetLineWeightValue(lw);
+			this._sb.AppendLine($"{lwValue.ToPdfUnit(PdfUnitType.Millimeter)} {PdfKey.LineWidth}");
+
+			Color color;
 			if (entity.Color.IsByLayer)
 			{
 				color = entity.Layer.Color;
@@ -98,7 +99,15 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawArc(Arc arc)
 		{
+			var vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision);
+			this.appendXY(vertices.First(), PdfKey.BeginPath);
 
+			for (int i = 1; vertices.Count() > i; i++)
+			{
+				this.appendXY(vertices[i], PdfKey.Line);
+			}
+
+			this.appendXY(vertices.Last(), PdfKey.Stroke);
 		}
 
 		private void drawCircle(Circle circle)

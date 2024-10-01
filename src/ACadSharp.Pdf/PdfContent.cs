@@ -48,7 +48,7 @@ namespace ACadSharp.Pdf
 
 			this.writeStackStart();
 
-			this._sb.AppendLine($"1 {PdfKey.LineWidth}");
+			//this._sb.AppendLine($"1 {PdfKey.LineWidth}");
 
 			foreach (Entity e in this.Owner.Entities)
 			{
