@@ -1,6 +1,3 @@
 [submodule "src/ACadSharp"]
 	path = src/ACadSharp
 	url = https://github.com/DomCR/ACadSharp.git
-[submodule "src/PdfSharp"]
-	path = src/PdfSharp
-	url = https://github.com/DomCR/PdfSharp.git
