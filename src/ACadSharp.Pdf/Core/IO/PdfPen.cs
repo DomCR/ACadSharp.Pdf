@@ -64,14 +64,14 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void applyStyle(Entity entity)
 		{
-			LineWeightType lw = LineWeightType.Default;
+			LineweightType lw = LineweightType.Default;
 			switch (entity.LineWeight)
 			{
-				case LineWeightType.ByDIPs:
+				case LineweightType.ByDIPs:
 					break;
-				case LineWeightType.ByBlock:
+				case LineweightType.ByBlock:
 					break;
-				case LineWeightType.ByLayer:
+				case LineweightType.ByLayer:
 					lw = entity.Layer.LineWeight;
 					break;
 			}
