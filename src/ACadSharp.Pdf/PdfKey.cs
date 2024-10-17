@@ -60,5 +60,7 @@
 		public const string StreamStart = "stream";
 		public const string StreamEnd = "endstream";
 		public const string EndObj = "endobj";
+
+		public const string StartXref = "startxref";
 	}
 }
