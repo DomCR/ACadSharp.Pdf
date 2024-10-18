@@ -48,9 +48,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case IPolyline polyline:
 					this.drawPolyline(polyline);
 					break;
-				//case Viewport viewport:
-				//	this.drawViewport(viewport);
-				//	break;
+				case Viewport viewport:
+					this.drawViewport(viewport);
+					break;
 				default:
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
@@ -172,7 +172,16 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawViewport(Viewport viewport)
 		{
+			BoundingBox box = viewport.GetBoundingBox();
 
+			this.appendXY(box.Min, PdfKey.BeginPath);
+			this.appendXY(box.Max, PdfKey.Line);
+			this._sb.AppendLine(PdfKey.Stroke);
+
+			//Draw rectangle
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+
+			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
 		private void appendArray(string key, params double[] arr)

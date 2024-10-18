@@ -60,6 +60,8 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public List<Entity> Entities { get; } = new();
 
+		public List<Viewport> Viewports { get; } = new();
+
 		public PdfContent Contents { get; }
 
 		private readonly PdfPages _parent;

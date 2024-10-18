@@ -3,6 +3,7 @@ using ACadSharp.Objects;
 using ACadSharp.Pdf.Core.IO;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ACadSharp.Pdf
@@ -50,7 +51,16 @@ namespace ACadSharp.Pdf
 
 			//this._sb.AppendLine($"1 {PdfKey.LineWidth}");
 
-			foreach (Entity e in this.Owner.Entities)
+			List<Entity> entities = new List<Entity>();
+			entities.AddRange(this.Owner.Entities);
+			foreach (Viewport v in this.Owner.Viewports)
+			{
+				pen.DrawEntity(v);
+
+				entities.AddRange(v.SelectEntities());
+			}
+
+			foreach (Entity e in entities)
 			{
 				pen.DrawEntity(e);
 			}

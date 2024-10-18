@@ -1,4 +1,7 @@
-﻿namespace ACadSharp.Pdf
+﻿using System.Net.NetworkInformation;
+using System.Runtime.Intrinsics.X86;
+
+namespace ACadSharp.Pdf
 {
 	public static class PdfKey
 	{
@@ -31,17 +34,16 @@
 		/// </summary>
 		public const string LineWidth = "w";
 
-		/// <summary>
-		/// Stroke the path.
-		/// </summary>
-		public const string Stroke = "S";
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public const string CloseStroke = "s";
-
 		//Path Construction Operators
+
+		/// <summary>
+		/// Append a cubic Bézier curve to the current path. The curve 
+		/// shall extend from the current point to the point(x3 , y3 ), using 
+		/// (x1, y1) and(x2 , y2 ) as the Bézier control points(see 8.5.2.2,
+		/// "Cubic Bézier Curves"). The new current point shall be
+		/// (x3 , y3 ). 
+		/// </summary>
+		public const string Arc = "c";
 
 		/// <summary>
 		/// Begin a new subpath by moving the current point to 
@@ -54,9 +56,36 @@
 
 		public const string Line = "l";
 
-		//Not classified
-		public const string Arc = "c";
+		/// <summary>
+		/// Append a rectangle to the current path as a complete 
+		/// subpath, with lower-left corner(x, y) and dimensions width
+		/// and height in user space.The operation
+		/// x y width height re
+		/// is equivalent to
+		/// x y m
+		/// (x + width ) y l
+		/// (x + width ) (y + height ) l
+		/// x(y + height ) l
+		/// h
+		/// </summary>
+		public const string Rectangle = "re";
+
+		//Path-Painting Operators
+
+		/// <summary>
+		/// Fill the path, using the nonzero winding number rule to determine the region 
+		/// to fill(see 8.5.3.3.2, "Nonzero Winding Number Rule"). Any subpaths that
+		/// are open shall be implicitly closed before being filled.
+		/// </summary>
 		public const string Fill = "f";
+
+		/// <summary>
+		/// Close and Stroke the path.
+		/// </summary>
+		public const string Stroke = "S";
+
+		//Not classified
+
 		public const string StreamStart = "stream";
 		public const string StreamEnd = "endstream";
 		public const string EndObj = "endobj";
