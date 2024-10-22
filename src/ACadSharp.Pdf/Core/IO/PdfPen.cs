@@ -40,7 +40,7 @@ namespace ACadSharp.Pdf.Core.IO
 					this.drawCircle(circle);
 					break;
 				case Line line:
-					this.drawLine(line);
+					this.drawLine(line, new Transform());
 					break;
 				case Point point:
 					this.drawPoint(point);
@@ -53,6 +53,18 @@ namespace ACadSharp.Pdf.Core.IO
 					break;
 				default:
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
+					break;
+			}
+		}
+
+		public void DrawEntity(Entity entity, Transform transform)
+		{
+			this.applyStyle(entity);
+
+			switch (entity)
+			{
+				case Line line:
+					this.drawLine(line, transform);
 					break;
 			}
 		}
@@ -133,10 +145,11 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine($"h {PdfKey.Stroke}");
 		}
 
-		private void drawLine(Line line)
+		private void drawLine(Line line, Transform transform)
 		{
-			this.appendXY(line.StartPoint, PdfKey.BeginPath);
-			this.appendXY(line.EndPoint, PdfKey.Line);
+			this.appendXY(transform.ApplyTransform(line.StartPoint), PdfKey.BeginPath);
+			this.appendXY(transform.ApplyTransform(line.EndPoint), PdfKey.Line);
+
 			this._sb.AppendLine(PdfKey.Stroke);
 		}
 

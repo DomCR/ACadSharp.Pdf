@@ -57,7 +57,19 @@ namespace ACadSharp.Pdf
 			{
 				pen.DrawEntity(v);
 
-				entities.AddRange(v.SelectEntities());
+				var box = v.GetBoundingBox();
+				var modelBox = v.GetModelBoundingBox();
+
+				var df = modelBox.Min * v.ScaleFactor;
+
+				Transform transform = new Transform();
+				transform.Translation = box.Min - df;
+				transform.Scale = new XYZ(v.ScaleFactor);
+
+				foreach (Entity e in v.SelectEntities())
+				{
+					pen.DrawEntity(e, transform);
+				}
 			}
 
 			foreach (Entity e in entities)
