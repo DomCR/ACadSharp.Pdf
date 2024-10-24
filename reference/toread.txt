@@ -1,6 +1,11 @@
 Example PDF Files pag 707
     - Graphics example
 
+7.7.3.3 Page Objects
+	- MediaBox
+	- CropBox
+	- TrimBox	
+
 8.4 Graphic State
 8.4.3.2 Line Width
 8.4.4 Graphics state Operators
