@@ -50,7 +50,7 @@ namespace ACadSharp.Pdf
 		/// <remarks>
 		/// The units used to draw the points are the same as the paper.
 		/// </remarks>
-		public double DotSize { get; set; } = 0.1d;
+		public double DotSize { get; set; } = 0.01d;
 
 		public ushort ArcPrecision { get; set; } = 100;
 

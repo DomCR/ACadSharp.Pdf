@@ -77,6 +77,11 @@ namespace ACadSharp.Pdf
 
 			foreach (Entity e in layout.AssociatedBlock.Entities)
 			{
+				if (e is Viewport)
+				{
+					continue;
+				}
+
 				page.Entities.Add(e);
 			}
 
@@ -87,7 +92,7 @@ namespace ACadSharp.Pdf
 					continue;
 				}
 
-				page.Entities.Add(vp);
+				page.Viewports.Add(vp);
 			}
 		}
 

@@ -3,6 +3,7 @@ using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -29,28 +30,33 @@ namespace ACadSharp.Pdf.Core.IO
 
 		public void DrawEntity(Entity entity)
 		{
+			this.DrawEntity(entity, new Transform());
+		}
+
+		public void DrawEntity(Entity entity, Transform transform)
+		{
 			this.applyStyle(entity);
 
 			switch (entity)
 			{
 				case Arc arc:
-					this.drawArc(arc);
+					this.drawArc(arc, transform);
 					break;
 				case Circle circle:
-					this.drawCircle(circle);
+					this.drawCircle(circle, transform);
 					break;
 				case Line line:
-					this.drawLine(line);
+					this.drawLine(line, transform);
 					break;
 				case Point point:
-					this.drawPoint(point);
+					this.drawPoint(point, transform);
 					break;
 				case IPolyline polyline:
-					this.drawPolyline(polyline);
+					this.drawPolyline(polyline, transform);
 					break;
-				//case Viewport viewport:
-				//	this.drawViewport(viewport);
-				//	break;
+				case Viewport viewport:
+					this.drawViewport(viewport);
+					break;
 				default:
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
@@ -97,9 +103,10 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(color.ToPdfString());
 		}
 
-		private void drawArc(Arc arc)
+		private void drawArc(Arc arc, Transform transform)
 		{
-			var vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision);
+			var vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision)
+				.Select(v => transform.ApplyTransform((XYZ)v)).ToArray();
 			this.appendXY(vertices.First(), PdfKey.BeginPath);
 
 			for (int i = 1; vertices.Count() > i; i++)
@@ -110,20 +117,19 @@ namespace ACadSharp.Pdf.Core.IO
 			this.appendXY(vertices.Last(), PdfKey.Stroke);
 		}
 
-		private void drawCircle(Circle circle)
+		private void drawCircle(Circle circle, Transform transform)
 		{
 			BoundingBox rect = circle.GetBoundingBox();
 
-			//double δx = rect.Max.X / 2;
-			//double δy = rect.Max.Y / 2;
+			var min = transform.ApplyTransform(rect.Min);
 
-			double δx = circle.Radius;
-			double δy = circle.Radius;
+			double δx = transform.Scale.X * circle.Radius;
+			double δy = transform.Scale.Y * circle.Radius;
 
 			double fx = δx * κ;
 			double fy = δy * κ;
-			double x0 = rect.Min.X + δx;
-			double y0 = rect.Min.Y + δy;
+			double x0 = min.X + δx;
+			double y0 = min.Y + δy;
 
 			this.appendXY(x0 + δx, y0, PdfKey.BeginPath);
 			this.appendArray(PdfKey.Arc, x0 + δx, y0 + fy, x0 + fx, y0 + δy, x0, y0 + δy);
@@ -133,46 +139,78 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine($"h {PdfKey.Stroke}");
 		}
 
-		private void drawLine(Line line)
+		private void drawLine(Line line, Transform transform)
 		{
-			this.appendXY(line.StartPoint, PdfKey.BeginPath);
-			this.appendXY(line.EndPoint, PdfKey.Line);
+			this.appendXY(transform.ApplyTransform(line.StartPoint), PdfKey.BeginPath);
+			this.appendXY(transform.ApplyTransform(line.EndPoint), PdfKey.Line);
+
 			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
-		private void drawPoint(Point point)
+		private void drawPoint(Point point, Transform transform)
 		{
 			double diff = this._configuration.DotSize / 2;
-			XYZ p = point.Location - new XYZ(diff);
+			XYZ p = transform.ApplyTransform(point.Location) - new XYZ(diff);
 
 			this._sb.AppendLine($"{this.toPdfDouble(p.X)} {this.toPdfDouble(p.Y)} {this.toPdfDouble(this._configuration.DotSize)} {this.toPdfDouble(this._configuration.DotSize)} re");
 			this._sb.AppendLine($"F");
 		}
 
-		private void drawPolyline(IPolyline polyline)
+		private void drawPolyline(IPolyline polyline, Transform transform)
 		{
-			this.appendXY(polyline.Vertices.First().Location, PdfKey.BeginPath);
+			var vertices = polyline.Vertices.Select(v => transform.ApplyTransform(v.Location.Convert<XYZ>()));
 
-			for (int i = 1; polyline.Vertices.Count() > i; i++)
+			this.appendXY(vertices.First(), PdfKey.BeginPath);
+
+			for (int i = 1; vertices.Count() > i; i++)
 			{
-				this.appendXY(polyline.Vertices.ElementAt(i).Location, PdfKey.Line);
+				this.appendXY(vertices.ElementAt(i), PdfKey.Line);
 			}
 
 
 			if (polyline.IsClosed)
 			{
-				this.appendXY(polyline.Vertices.Last().Location, PdfKey.Line);
-				this.appendXY(polyline.Vertices.First().Location, PdfKey.Line);
+				this.appendXY(vertices.Last(), PdfKey.Line);
+				this.appendXY(vertices.First(), PdfKey.Line);
 			}
 			else
 			{
-				this.appendXY(polyline.Vertices.Last().Location, PdfKey.Stroke);
+				this.appendXY(vertices.Last(), PdfKey.Stroke);
 			}
 		}
 
 		private void drawViewport(Viewport viewport)
 		{
+			BoundingBox box = viewport.GetBoundingBox();
 
+			this.appendXY(box.Min, PdfKey.BeginPath);
+			this.appendXY(box.Max, PdfKey.Line);
+			this._sb.AppendLine(PdfKey.Stroke);
+
+			//Draw rectangle
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this._sb.AppendLine(PdfKey.Stroke);
+
+			//Limit viewport view
+			this._sb.AppendLine(PdfKey.StackStart);
+
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this._sb.AppendLine("W n");
+
+			var modelBox = viewport.GetModelBoundingBox();
+
+			var df = modelBox.Min * viewport.ScaleFactor;
+
+			Transform transform = new Transform();
+			transform.Translation = box.Min - df;
+			transform.Scale = new XYZ(viewport.ScaleFactor);
+
+			foreach (Entity e in viewport.SelectEntities())
+			{
+				this.DrawEntity(e, transform);
+			}
+
+			this._sb.AppendLine(PdfKey.StackEnd);
 		}
 
 		private void appendArray(string key, params double[] arr)

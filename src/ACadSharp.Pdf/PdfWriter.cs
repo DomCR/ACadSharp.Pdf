@@ -28,7 +28,6 @@ namespace ACadSharp.Pdf
 			this.assignIds();
 
 			this.writeLine("%PDF-1.5");
-			//this.write(new byte[6] { 37, 161, 162, 163, 164, 10 });
 			this.write(new byte[6] { 0x25, 0xA1, 0xD3, 0xF4, 0xCC, 0xA });
 
 			//Information
@@ -52,7 +51,7 @@ namespace ACadSharp.Pdf
 
 			this.writeTrailer();
 
-			this.writeLine("startxref");
+			this.writeLine(PdfKey.StartXref);
 			this.writeLine(xrefPos.ToString(CultureInfo.InvariantCulture));
 			this.write("%%EOF");
 		}
