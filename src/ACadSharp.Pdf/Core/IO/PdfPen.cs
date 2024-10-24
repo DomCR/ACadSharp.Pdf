@@ -189,8 +189,28 @@ namespace ACadSharp.Pdf.Core.IO
 
 			//Draw rectangle
 			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
-
 			this._sb.AppendLine(PdfKey.Stroke);
+
+			//Limit viewport view
+			this._sb.AppendLine(PdfKey.StackStart);
+
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this._sb.AppendLine("W n");
+
+			var modelBox = viewport.GetModelBoundingBox();
+
+			var df = modelBox.Min * viewport.ScaleFactor;
+
+			Transform transform = new Transform();
+			transform.Translation = box.Min - df;
+			transform.Scale = new XYZ(viewport.ScaleFactor);
+
+			foreach (Entity e in viewport.SelectEntities())
+			{
+				this.DrawEntity(e, transform);
+			}
+
+			this._sb.AppendLine(PdfKey.StackEnd);
 		}
 
 		private void appendArray(string key, params double[] arr)

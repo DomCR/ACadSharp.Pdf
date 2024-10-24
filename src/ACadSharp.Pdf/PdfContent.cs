@@ -49,30 +49,12 @@ namespace ACadSharp.Pdf
 
 			this.writeStackStart();
 
-			//this._sb.AppendLine($"1 {PdfKey.LineWidth}");
-
-			List<Entity> entities = new List<Entity>();
-			entities.AddRange(this.Owner.Entities);
 			foreach (Viewport v in this.Owner.Viewports)
 			{
 				pen.DrawEntity(v);
-
-				var box = v.GetBoundingBox();
-				var modelBox = v.GetModelBoundingBox();
-
-				var df = modelBox.Min * v.ScaleFactor;
-
-				Transform transform = new Transform();
-				transform.Translation = box.Min - df;
-				transform.Scale = new XYZ(v.ScaleFactor);
-
-				foreach (Entity e in v.SelectEntities())
-				{
-					pen.DrawEntity(e, transform);
-				}
 			}
 
-			foreach (Entity e in entities)
+			foreach (Entity e in this.Owner.Entities)
 			{
 				pen.DrawEntity(e);
 			}

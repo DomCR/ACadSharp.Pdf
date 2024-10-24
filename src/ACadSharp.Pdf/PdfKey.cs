@@ -1,4 +1,7 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.ComponentModel;
+using System.Data;
+using System.IO;
+using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.X86;
 
 namespace ACadSharp.Pdf
@@ -83,6 +86,16 @@ namespace ACadSharp.Pdf
 		/// Close and Stroke the path.
 		/// </summary>
 		public const string Stroke = "S";
+
+		//Clipping Path Operators
+
+		/// <summary>
+		/// Modify the current clipping path by intersecting it with the current path, using 
+		/// the nonzero winding number rule to determine which regions lie inside the
+		/// clipping path.
+		/// </summary>
+		public const string ClippingPath = "W";
+
 
 		//Not classified
 
