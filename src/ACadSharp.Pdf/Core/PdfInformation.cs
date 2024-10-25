@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using ACadSharp.Pdf.Core;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
 	public class PdfInformation : PdfDictionary
 	{

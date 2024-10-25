@@ -19,8 +19,10 @@ namespace ACadSharp.Pdf.Tests
 		public void AddModelSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
-			PdfExporter exporter = this.getPdfExporter(filename, this.getDocument());
-			exporter.AddModelSpace();
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.AddModelSpace(doc);
 			exporter.Close();
 		}
 
@@ -28,8 +30,10 @@ namespace ACadSharp.Pdf.Tests
 		public void AddPaperSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
-			PdfExporter exporter = this.getPdfExporter(filename, this.getDocument());
-			exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(doc.Layouts["Layout1"]);
 			exporter.Close();
 		}
 
@@ -37,17 +41,18 @@ namespace ACadSharp.Pdf.Tests
 		public void AddBlockTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
-			PdfExporter exporter = this.getPdfExporter(filename, this.getDocument());
-			exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(doc.Layouts["Layout1"]);
 			exporter.Close();
 		}
 
-		private PdfExporter getPdfExporter(string path, CadDocument document)
+		private PdfExporter getPdfExporter(string path)
 		{
 			PdfExporter exporter = new PdfExporter(path);
 
 			exporter.Configuration.OnNotification += this.onNotification;
-			exporter.Configuration.ReferenceDocument = document;
 
 			return exporter;
 		}

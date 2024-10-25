@@ -1,9 +1,7 @@
 ﻿using ACadSharp.Entities;
-using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Core;
 using ACadSharp.Tables;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,6 +12,9 @@ namespace ACadSharp.Pdf
 	/// </summary>
 	public class PdfExporter
 	{
+		/// <summary>
+		/// Configuration for the <see cref="PdfExporter"/> instance.
+		/// </summary>
 		public PdfConfiguration Configuration { get; } = new PdfConfiguration();
 
 		private readonly PdfDocument _pdf;
@@ -38,14 +39,6 @@ namespace ACadSharp.Pdf
 		}
 
 		/// <summary>
-		/// Add the model space form the referenced cad document.
-		/// </summary>
-		public void AddModelSpace()
-		{
-			this.AddModelSpace(this.Configuration.ReferenceDocument);
-		}
-
-		/// <summary>
 		/// Add the model space from a cad document.
 		/// </summary>
 		/// <param name="document"></param>
@@ -60,11 +53,6 @@ namespace ACadSharp.Pdf
 		/// <summary>
 		/// Add all the paper layouts 
 		/// </summary>
-		public void AddPaperLayouts()
-		{
-			this.AddPaperLayouts(this.Configuration.ReferenceDocument);
-		}
-
 		public void AddPaperLayouts(CadDocument document)
 		{
 			this.Add(document.Layouts);
