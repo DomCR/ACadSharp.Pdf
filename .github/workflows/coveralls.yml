@@ -24,15 +24,16 @@ jobs:
           dotnet build --no-restore
           dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal ACadSharp.Pdf.Tests/
     - name: Build and Test Submodules
-      working-directory: src/ACadSharp/src/CSUtilities
+      working-directory: src/ACadSharp/src
       run: |
           git submodule update --force --recursive --init --remote
           dotnet restore
           dotnet build --no-restore
-          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal CSUtilities.Tests/
-          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal CSMath.Tests/
+          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal ACadSharp.Tests/
+          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal CSUtilities/CSUtilities.Tests/
+          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal CSUtilities/CSMath.Tests/
     - name: Coveralls action
       uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ github.token }}
-        files: src/ACadSharp/src/ACadSharp.Pdf.Tests/TestResults/coverage.info src/ACadSharp/src/CSUtilities/CSUtilities.Tests/TestResults/coverage.info src/ACadSharp/src/CSUtilities/CSMath.Tests/TestResults/coverage.info 
+        files: src/ACadSharp.Pdf.Tests/TestResults/coverage.info src/ACadSharp/src/ACadSharp.Tests/TestResults/coverage.info src/ACadSharp/src/CSUtilities/CSUtilities.Tests/TestResults/coverage.info src/ACadSharp/src/CSUtilities/CSMath.Tests/TestResults/coverage.info 
