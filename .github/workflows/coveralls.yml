@@ -10,21 +10,21 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with: 
         submodules: true
     - uses: cardinalby/export-env-action@v2
       with:
         envFile: 'github.env'
-    - name: Build and Test ACadSharp
+    - name: Build and Test ACadSharp.Pdf
       working-directory: src
       run: |
           git submodule update --force --recursive --init --remote
           dotnet restore
           dotnet build --no-restore
-          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal ACadSharp.Tests/
+          dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=lcov --no-build --verbosity normal ACadSharp.Pdf.Tests/
     - name: Build and Test Submodules
-      working-directory: src/CSUtilities
+      working-directory: src/ACadSharp/src/CSUtilities
       run: |
           git submodule update --force --recursive --init --remote
           dotnet restore
