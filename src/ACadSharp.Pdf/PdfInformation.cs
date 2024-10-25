@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using ACadSharp.Pdf.Core;
 
 namespace ACadSharp.Pdf
 {

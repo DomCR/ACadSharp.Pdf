@@ -1,4 +1,4 @@
-﻿namespace ACadSharp.Pdf
+﻿namespace ACadSharp.Pdf.Core
 {
 	public abstract class PdfItem : IPdfItem
 	{

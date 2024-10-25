@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.X86;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
 	public static class PdfKey
 	{

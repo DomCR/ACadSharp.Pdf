@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using ACadSharp.Pdf.Core;
 
 namespace ACadSharp.Pdf
 {

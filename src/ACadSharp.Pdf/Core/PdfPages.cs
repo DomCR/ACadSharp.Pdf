@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
 	public class PdfPages : PdfDictionary, IEnumerable<PdfPage>
 	{

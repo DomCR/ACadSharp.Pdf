@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using ACadSharp.Pdf.Core;
 
 namespace ACadSharp.Pdf.Extensions
 {

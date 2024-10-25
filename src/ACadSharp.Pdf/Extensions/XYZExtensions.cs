@@ -1,4 +1,5 @@
 ﻿using ACadSharp.Objects;
+using ACadSharp.Pdf.Core;
 using CSMath;
 using System;
 
