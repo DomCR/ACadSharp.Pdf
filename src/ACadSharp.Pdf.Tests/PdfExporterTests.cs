@@ -1,5 +1,6 @@
 using ACadSharp.IO;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -27,7 +28,7 @@ namespace ACadSharp.Pdf.Tests
 		}
 
 		[Fact]
-		public void AddPaperSpaceTest()
+		public void AddLayoutTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
 			CadDocument doc = this.getDocument();
@@ -40,11 +41,11 @@ namespace ACadSharp.Pdf.Tests
 		[Fact]
 		public void AddBlockTest()
 		{
-			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "my_block.pdf");
 			CadDocument doc = this.getDocument();
 
 			PdfExporter exporter = this.getPdfExporter(filename);
-			exporter.Add(doc.Layouts["Layout1"]);
+			exporter.Add(doc.BlockRecords["my_block"]);
 			exporter.Close();
 		}
 
