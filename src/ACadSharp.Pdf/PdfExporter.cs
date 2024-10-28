@@ -1,8 +1,7 @@
 ﻿using ACadSharp.Entities;
-using ACadSharp.IO;
 using ACadSharp.Objects;
+using ACadSharp.Pdf.Core;
 using ACadSharp.Tables;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,8 +10,11 @@ namespace ACadSharp.Pdf
 	/// <summary>
 	/// Exporter to create a pdf document.
 	/// </summary>
-	public class PdfExporter : IDisposable
+	public class PdfExporter
 	{
+		/// <summary>
+		/// Configuration for the <see cref="PdfExporter"/> instance.
+		/// </summary>
 		public PdfConfiguration Configuration { get; } = new PdfConfiguration();
 
 		private readonly PdfDocument _pdf;
@@ -36,26 +38,30 @@ namespace ACadSharp.Pdf
 			this._pdf = new PdfDocument();
 		}
 
-		public void AddModelSpace()
-		{
-			this.AddModelSpace(this.Configuration.ReferenceDocument);
-		}
-
+		/// <summary>
+		/// Add the model space from a cad document.
+		/// </summary>
+		/// <param name="document"></param>
+		/// <remarks>
+		/// This method does not import the <see cref="TableEntry"/> from the document.
+		/// </remarks>
 		public void AddModelSpace(CadDocument document)
 		{
 			this.Add(document.ModelSpace);
 		}
 
-		public void AddPaperSpaces()
-		{
-			this.AddPaperSpaces(this.Configuration.ReferenceDocument);
-		}
-
-		public void AddPaperSpaces(CadDocument document)
+		/// <summary>
+		/// Add all the paper layouts 
+		/// </summary>
+		public void AddPaperLayouts(CadDocument document)
 		{
 			this.Add(document.Layouts);
 		}
 
+		/// <summary>
+		/// Add layouts to the pdf as pages.
+		/// </summary>
+		/// <param name="layouts"></param>
 		public void Add(IEnumerable<Layout> layouts)
 		{
 			foreach (var layout in layouts)
@@ -69,6 +75,10 @@ namespace ACadSharp.Pdf
 			}
 		}
 
+		/// <summary>
+		/// Add a <see cref="Layout"/> to the pdf as a page.
+		/// </summary>
+		/// <param name="layout"></param>
 		public void Add(Layout layout)
 		{
 			PdfPage page = this._pdf.Pages.AddPage();
@@ -96,24 +106,15 @@ namespace ACadSharp.Pdf
 			}
 		}
 
+		/// <summary>
+		/// Add a <see cref="BlockRecord"/> as a page.
+		/// </summary>
+		/// <param name="block"></param>
 		public void Add(BlockRecord block)
 		{
 			PdfPage page = this._pdf.Pages.AddPage();
 
 			page.Add(block);
-		}
-
-		public void AddPage(BlockRecord block, PlotSettings settings)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void AddLayouts(CadDocument document)
-		{
-			foreach (Objects.Layout layout in document.Layouts)
-			{
-				this.Add(layout);
-			}
 		}
 
 		/// <summary>
@@ -125,12 +126,6 @@ namespace ACadSharp.Pdf
 			{
 				writer.Write();
 			}
-		}
-
-		/// <inheritdoc/>
-		public void Dispose()
-		{
-			//this._pdf.Dispose();
 		}
 	}
 }

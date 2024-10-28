@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 using Xunit.Sdk;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestFramework("ACadSharp.Tests.TestSetup", "ACadSharp.Tests")]
+[assembly: TestFramework("ACadSharp.Pdf.Tests.TestSetup", "ACadSharp.Pdf.Tests")]
 
 namespace ACadSharp.Pdf.Tests
 {

@@ -6,8 +6,11 @@ namespace ACadSharp.Pdf
 {
 	public class PdfConfiguration
 	{
+		/// <summary>
+		/// Line weight default values.
+		/// </summary>
 		public static readonly IReadOnlyDictionary<LineweightType, double> LineWeightDefaultValues =
-		new Dictionary<LineweightType, double>()
+			new Dictionary<LineweightType, double>()
 		{
 			{ LineweightType.Default, 0 },
 			{ LineweightType.W0, 0.001 },
@@ -52,13 +55,15 @@ namespace ACadSharp.Pdf
 		/// </remarks>
 		public double DotSize { get; set; } = 0.01d;
 
-		public ushort ArcPrecision { get; set; } = 100;
+		/// <summary>
+		/// Number of divisions performed in the arcs when drawing the shape.
+		/// </summary>
+		public ushort ArcPrecision { get; set; } = 256;
 
-		public short DotShape { get; set; }
-
+		/// <summary>
+		/// Decimal format and precision set for the pdf file.
+		/// </summary>
 		public string DecimalFormat { get; set; } = "0.####";
-
-		public CadDocument ReferenceDocument { get; set; }
 
 		public Dictionary<LineweightType, double> LineWeightValues { get; set; } = new();
 

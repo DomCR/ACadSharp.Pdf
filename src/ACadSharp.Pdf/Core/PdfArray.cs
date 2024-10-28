@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
 	public class PdfArray<T> : PdfItem
 		where T : PdfItem

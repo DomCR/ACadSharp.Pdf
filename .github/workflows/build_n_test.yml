@@ -14,14 +14,16 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with: 
         submodules: true
+        fetch-depth: 0
     - uses: cardinalby/export-env-action@v2
       with:
         envFile: 'github.env'
     - name: Build and test
       run: |
+          git submodule update --force --recursive --init --remote
           dotnet restore
-          dotnet build --configuration Release --no-restore
-          dotnet test --configuration Release --no-build --verbosity normal
+          dotnet build --configuration Debug --no-restore
+          dotnet test --configuration Debug --no-build --verbosity normal

@@ -4,9 +4,9 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
-	public class PdfWriter : IDisposable
+	internal class PdfWriter : IDisposable
 	{
 		private int _currNumber = 1;
 		private Encoding _encoding = Encoding.ASCII;
@@ -118,7 +118,7 @@ namespace ACadSharp.Pdf
 
 		private void writeLine(string str)
 		{
-			this.write((str + "\n"));
+			this.write(str + "\n");
 		}
 	}
 }

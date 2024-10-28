@@ -1,5 +1,6 @@
 using ACadSharp.IO;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,41 +20,40 @@ namespace ACadSharp.Pdf.Tests
 		public void AddModelSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
-			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
-			{
-				exporter.AddModelSpace();
-				exporter.Close();
-			}
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.AddModelSpace(doc);
+			exporter.Close();
 		}
 
 		[Fact]
-		public void AddPaperSpaceTest()
+		public void AddLayoutTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
-			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
-			{
-				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
-				exporter.Close();
-			}
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(doc.Layouts["Layout1"]);
+			exporter.Close();
 		}
 
 		[Fact]
 		public void AddBlockTest()
 		{
-			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "layout1.pdf");
-			using (PdfExporter exporter = this.getPdfExporter(filename, this.getDocument()))
-			{
-				exporter.Add(exporter.Configuration.ReferenceDocument.Layouts["Layout1"]);
-				exporter.Close();
-			}
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "my_block.pdf");
+			CadDocument doc = this.getDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(doc.BlockRecords["my_block"]);
+			exporter.Close();
 		}
 
-		private PdfExporter getPdfExporter(string path, CadDocument document)
+		private PdfExporter getPdfExporter(string path)
 		{
 			PdfExporter exporter = new PdfExporter(path);
 
 			exporter.Configuration.OnNotification += this.onNotification;
-			exporter.Configuration.ReferenceDocument = document;
 
 			return exporter;
 		}

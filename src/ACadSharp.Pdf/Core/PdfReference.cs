@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ACadSharp.Pdf
+namespace ACadSharp.Pdf.Core
 {
 	public class PdfReference<T> : PdfItem
 	{
