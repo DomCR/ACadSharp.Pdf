@@ -1,22 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net5.0;net6.0;net7.0;net48;netstandard2.1</TargetFrameworks>
+		<Authors>DomCr</Authors>
+		<PackageId>ACadSharp.Pdf</PackageId>
+		<PackageTags>C# Dwg Dxf Pdf</PackageTags>
+		<RepositoryUrl>https://github.com/DomCR/ACadSharp.Pdf</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/DomCR/ACadSharp.Pdf</PackageProjectUrl>
+		<Copyright>Copyright (c) 2024 Albert Domenech</Copyright>
+		<Description>Library to generate Pdf files from dwg and dxf files read by ACadSharp.</Description>
+		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Version>0.0.0</Version>
+		<Version>0.0.1-beta</Version>
+		<PackageOutputPath>../nupkg</PackageOutputPath>
 	</PropertyGroup>
-
+	
 	<ItemGroup Condition="'$(Configuration)' != 'Release'">
 		<ProjectReference Include="..\ACadSharp\src\ACadSharp\ACadSharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
 		<PackageReference Include="ACadSharp" Version="*" />
-		<ProjectReference Include="..\PdfSharp\src\foundation\src\PDFsharp\src\PdfSharp\PdfSharp.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
