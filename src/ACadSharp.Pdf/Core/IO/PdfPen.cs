@@ -54,6 +54,8 @@ namespace ACadSharp.Pdf.Core.IO
 				case IPolyline polyline:
 					this.drawPolyline(polyline, transform);
 					break;
+				case UnderlayEntity underlay:
+					throw new System.NotImplementedException();
 				case Viewport viewport:
 					this.drawViewport(viewport);
 					break;
