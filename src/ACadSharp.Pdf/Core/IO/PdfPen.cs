@@ -45,6 +45,8 @@ namespace ACadSharp.Pdf.Core.IO
 				case Circle circle:
 					this.drawCircle(circle, transform);
 					break;
+				case Dimension dimension:
+					throw new System.NotImplementedException();
 				case Line line:
 					this.drawLine(line, transform);
 					break;
