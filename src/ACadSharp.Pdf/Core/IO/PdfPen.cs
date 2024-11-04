@@ -3,6 +3,7 @@ using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case Circle circle:
 					this.drawCircle(circle, transform);
 					break;
+					case Hatch hatch:
+					this.drawHatch(hatch, transform);
+					break;
 				case Line line:
 					this.drawLine(line, transform);
 					break;
@@ -61,6 +65,11 @@ namespace ACadSharp.Pdf.Core.IO
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
 			}
+		}
+
+		private void drawHatch(Hatch hatch, Transform transform)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override string ToString()
