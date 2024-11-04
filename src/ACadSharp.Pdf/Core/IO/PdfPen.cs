@@ -51,6 +51,8 @@ namespace ACadSharp.Pdf.Core.IO
 				case Point point:
 					this.drawPoint(point, transform);
 					break;
+				case TextEntity text:
+					throw new System.NotImplementedException();
 				case IPolyline polyline:
 					this.drawPolyline(polyline, transform);
 					break;
