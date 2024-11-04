@@ -36,4 +36,6 @@
 		</None>
 	</ItemGroup>
 
+	<Import Project="..\ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems" Label="Shared" />
+
 </Project>
