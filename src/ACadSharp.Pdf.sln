@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 		..\.gitignore = ..\.gitignore
 		..\.gitmodules = ..\.gitmodules
+		Directory.Build.props = Directory.Build.props
 		..\github.env = ..\github.env
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
@@ -86,6 +87,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{0e7b7771-abd9-4abc-a626-7c73120248b9}*SharedItemsImports = 5
 		ACadSharp\src\CSUtilities\CSMath\CSMath.projitems*{411b6122-5ef6-46db-a8f2-43e9c1841e4a}*SharedItemsImports = 13
+		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{6759f056-7fac-4f41-9397-87d8f545fbed}*SharedItemsImports = 5
 		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{7950b9cb-883d-4065-8fd0-9a6822bb2fe2}*SharedItemsImports = 13
 		ACadSharp\src\CSUtilities\CSMath\CSMath.projitems*{954e6718-3377-4f1f-8487-6a9412829661}*SharedItemsImports = 5
 		ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems*{954e6718-3377-4f1f-8487-6a9412829661}*SharedItemsImports = 5
