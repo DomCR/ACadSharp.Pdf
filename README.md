@@ -19,6 +19,5 @@ Library to generate Pdf files from dwg and dxf files read by [ACadSharp](https:/
     - MLINE
     - MULTILEADER
     - RAY
-    - ELLIPSE
     - TOLERANCE
     - XLINE
