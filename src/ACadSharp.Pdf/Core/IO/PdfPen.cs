@@ -49,6 +49,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case Circle circle:
 					this.drawCircle(circle, transform);
 					break;
+				case Ellipse ellipse:
+					this.drawEllpise(ellipse, transform);
+					break;
 				case Line line:
 					this.drawLine(line, transform);
 					break;
@@ -109,16 +112,12 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawArc(Arc arc, Transform transform)
 		{
-			var vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision)
-				.Select(v => transform.ApplyTransform((XYZ)v)).ToArray();
-			this.appendXY(vertices.First(), PdfKey.BeginPath);
+			XY[] vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision)
+				.Select(v => transform.ApplyTransform((XYZ)v))
+				.Select(v => (XY)v)
+				.ToArray();
 
-			for (int i = 1; vertices.Count() > i; i++)
-			{
-				this.appendXY(vertices[i], PdfKey.Line);
-			}
-
-			this.appendXY(vertices.Last(), PdfKey.Stroke);
+			this.appendPath(vertices);
 		}
 
 		private void drawCircle(Circle circle, Transform transform)
@@ -143,6 +142,17 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine($"h {PdfKey.Stroke}");
 		}
 
+		private void drawEllpise(Ellipse ellipse, Transform transform)
+		{
+			XY[] vertices = ellipse.PolygonalVertexes(this._configuration.ArcPrecision)
+				.Select(v => v + (XY)ellipse.Center)
+				.Select(v => transform.ApplyTransform((XYZ)v))
+				.Select(v => (XY)v)
+				.ToArray();
+
+			this.appendPath(vertices);
+		}
+
 		private void drawLine(Line line, Transform transform)
 		{
 			this.appendXY(transform.ApplyTransform(line.StartPoint), PdfKey.BeginPath);
@@ -162,7 +172,7 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawPolyline(IPolyline polyline, Transform transform)
 		{
-			var vertices = polyline.Vertices.Select(v => transform.ApplyTransform(v.Location.Convert<XYZ>()));
+			IEnumerable<XYZ> vertices = polyline.Vertices.Select(v => transform.ApplyTransform(v.Location.Convert<XYZ>()));
 
 			this.appendXY(vertices.First(), PdfKey.BeginPath);
 
@@ -171,7 +181,6 @@ namespace ACadSharp.Pdf.Core.IO
 				this.appendXY(vertices.ElementAt(i), PdfKey.Line);
 			}
 
-
 			if (polyline.IsClosed)
 			{
 				this.appendXY(vertices.Last(), PdfKey.Line);
@@ -179,8 +188,10 @@ namespace ACadSharp.Pdf.Core.IO
 			}
 			else
 			{
-				this.appendXY(vertices.Last(), PdfKey.Stroke);
+				this.appendXY(vertices.Last(), PdfKey.Line);
 			}
+
+			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
 		private void drawViewport(Viewport viewport)
@@ -215,6 +226,18 @@ namespace ACadSharp.Pdf.Core.IO
 			}
 
 			this._sb.AppendLine(PdfKey.StackEnd);
+		}
+
+		private void appendPath(params XY[] vertices)
+		{
+			this.appendXY(vertices.First(), PdfKey.BeginPath);
+
+			for (int i = 1; vertices.Count() > i; i++)
+			{
+				this.appendXY(vertices[i], PdfKey.Line);
+			}
+
+			this.appendXY(vertices.Last(), PdfKey.Stroke);
 		}
 
 		private void appendArray(string key, params double[] arr)
