@@ -1,10 +1,4 @@
-﻿using System.ComponentModel;
-using System.Data;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.Intrinsics.X86;
-
-namespace ACadSharp.Pdf.Core
+﻿namespace ACadSharp.Pdf.Core
 {
 	public static class PdfKey
 	{

@@ -4,6 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+#if NETFRAMEWORK
+using CSUtilities.Extensions;
+#endif
+
 namespace ACadSharp.Pdf.Core
 {
 	internal class PdfWriter : IDisposable
