@@ -52,6 +52,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case Ellipse ellipse:
 					this.drawEllpise(ellipse, transform);
 					break;
+				case Insert insert:
+					this.drawInsert(insert, transform);
+					break;
 				case Line line:
 					this.drawLine(line, transform);
 					break;
@@ -151,6 +154,11 @@ namespace ACadSharp.Pdf.Core.IO
 				.ToArray();
 
 			this.appendPath(vertices);
+		}
+
+		private void drawInsert(Insert insert, Transform transform)
+		{
+
 		}
 
 		private void drawLine(Line line, Transform transform)
