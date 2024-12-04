@@ -24,4 +24,6 @@ jobs:
          dotnet restore
          dotnet build --configuration Release
          dotnet pack ./ACadSharp.pdf/ACadSharp.Pdf.csproj --configuration Release
-         dotnet nuget push ./nupkg/ACadSharp.Pdf.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+         foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+         }
