@@ -20,6 +20,7 @@ jobs:
    - name: Publish NuGet package
      working-directory: src
      run: |
+         git submodule update --force --recursive --init --remote
          dotnet restore
          dotnet pack ./ACadSharp.pdf/ACadSharp.Pdf.csproj -c Release
          dotnet nuget push ./nupkg/ACadSharp.Pdf.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
