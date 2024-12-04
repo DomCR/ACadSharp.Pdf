@@ -1,6 +1,7 @@
 name: Publish NuGet package
 
 on:
+ workflow_dispatch:
  release:
     branches: [ master ]
 
@@ -12,14 +13,13 @@ jobs:
  build:
 
    runs-on: windows-latest
-
    steps:
    - uses: actions/checkout@v3
      with: 
        submodules: true
-   - name: Restore dependencies
-     run: dotnet restore
-   - name: Build NuGet package
-     run: dotnet pack ./src/ACadSharp.pdf/ACadSharp.Pdf.csproj -c Release
    - name: Publish NuGet package
-     run: dotnet nuget push ./src/nupkg/ACadSharp.Pdf.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+     working-directory: src
+     run: |
+         dotnet restore
+         dotnet pack ./ACadSharp.pdf/ACadSharp.Pdf.csproj -c Release
+         dotnet nuget push ./nupkg/ACadSharp.Pdf.*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
