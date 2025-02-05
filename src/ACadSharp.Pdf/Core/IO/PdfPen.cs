@@ -199,7 +199,11 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawText(TextEntity text, Transform transform)
 		{
-
+			this._sb.AppendLine(PdfKey.BasicTextStart);
+			this._sb.AppendLine("/F17 12 Tf");
+			this.appendXY(text.InsertPoint, "Td");
+			this._sb.AppendLine($"({text.Value}) Tj");
+			this._sb.AppendLine(PdfKey.BasicTextEnd);
 		}
 
 		private void drawViewport(Viewport viewport)

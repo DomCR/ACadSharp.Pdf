@@ -81,6 +81,9 @@
 		/// </summary>
 		public const string Stroke = "S";
 
+		public const string BasicTextStart = "BT";
+		public const string BasicTextEnd = "ET";
+
 		//Clipping Path Operators
 
 		/// <summary>
