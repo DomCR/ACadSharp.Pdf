@@ -200,7 +200,7 @@ namespace ACadSharp.Pdf.Core.IO
 		private void drawText(TextEntity text, Transform transform)
 		{
 			this._sb.AppendLine(PdfKey.BasicTextStart);
-			this._sb.AppendLine("/F17 12 Tf");
+			this._sb.AppendLine($"/F17 {text.Height.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat)} {PdfKey.TypeFont}");
 			this.appendXY(text.InsertPoint, "Td");
 			this._sb.AppendLine($"({text.Value}) Tj");
 			this._sb.AppendLine(PdfKey.BasicTextEnd);

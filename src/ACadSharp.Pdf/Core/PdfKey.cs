@@ -81,6 +81,15 @@
 		/// </summary>
 		public const string Stroke = "S";
 
+		public const string TypeFont = "Tf";
+
+		/// <summary>
+		///  Move to the start of the next line, offset from the start of the current line by 
+		/// (tx, ty). tx and ty shall denote numbers expressed in unscaled text space
+		/// units.More precisely, this operator shall perform these assignments.
+		/// </summary>
+		public const string TextTranslation = "Td";
+
 		public const string BasicTextStart = "BT";
 		public const string BasicTextEnd = "ET";
 
