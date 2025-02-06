@@ -22,13 +22,17 @@ namespace ACadSharp.Pdf.Core.IO
 		// ReSharper disable once InconsistentNaming
 		public const double κ = 0.5522847498307933984022516322796;
 
-		public PlotPaperUnits PaperUnits { get; set; }
+		public PlotPaperUnits PaperUnits { get { return this._layout.PaperUnits; } }
+
+		public double DenominatorScale { get { return this._layout.DenominatorScale; } }
 
 		private readonly StringBuilder _sb = new();
+		private readonly Layout _layout;
 		private readonly PdfConfiguration _configuration;
 
-		public PdfPen(PdfConfiguration configuration)
+		public PdfPen(Layout layout, PdfConfiguration configuration)
 		{
+			this._layout = layout;
 			this._configuration = configuration;
 		}
 
@@ -200,7 +204,15 @@ namespace ACadSharp.Pdf.Core.IO
 		private void drawText(TextEntity text, Transform transform)
 		{
 			this._sb.AppendLine(PdfKey.BasicTextStart);
-			this._sb.AppendLine($"/F17 {text.Height.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat)} {PdfKey.TypeFont}");
+
+			this._sb.Append("/F");
+			this._sb.Append("1");   //Font id in the pdf, the font definition should be embedded
+			this._sb.Append(' ');
+			this._sb.Append(this.toPdfDouble(text.Height));
+			this._sb.Append(' ');
+			this._sb.Append(PdfKey.TypeFont);
+			this._sb.AppendLine();
+
 			this.appendXY(text.InsertPoint, "Td");
 			this._sb.AppendLine($"({text.Value}) Tj");
 			this._sb.AppendLine(PdfKey.BasicTextEnd);
@@ -280,7 +292,7 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private string toPdfDouble(double value)
 		{
-			return value.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
 		}
 	}
 }
