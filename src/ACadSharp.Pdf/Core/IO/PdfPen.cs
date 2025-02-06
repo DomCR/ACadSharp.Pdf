@@ -65,7 +65,7 @@ namespace ACadSharp.Pdf.Core.IO
 				case IPolyline polyline:
 					this.drawPolyline(polyline, transform);
 					break;
-				case TextEntity text:
+				case IText text:
 					this.drawText(text, transform);
 					break;
 				case Viewport viewport:
@@ -201,7 +201,7 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
-		private void drawText(TextEntity text, Transform transform)
+		private void drawText(IText text, Transform transform)
 		{
 			this._sb.AppendLine(PdfKey.BasicTextStart);
 
@@ -214,7 +214,21 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine();
 
 			this.appendXY(text.InsertPoint, "Td");
-			this._sb.AppendLine($"({text.Value}) Tj");
+
+			switch (text)
+			{
+				case MText mtext:
+					foreach (var l in mtext.GetTextLines())
+					{
+						this._sb.AppendLine($"({l}) Tj");
+					}
+					break;
+				default:
+					this._sb.AppendLine($"({text.Value}) Tj");
+					break;
+			}
+
+
 			this._sb.AppendLine(PdfKey.BasicTextEnd);
 		}
 
@@ -278,16 +292,6 @@ namespace ACadSharp.Pdf.Core.IO
 		private void appendXY(IVector value, string key)
 		{
 			this.appendXY(value[0], value[1], key);
-		}
-
-		private void appendXY(XY value, string key)
-		{
-			this.appendXY(value.X, value.Y, key);
-		}
-
-		private void appendXY(XYZ value, string key)
-		{
-			this.appendXY((XY)value, key);
 		}
 
 		private string toPdfDouble(double value)
