@@ -32,9 +32,25 @@ namespace ACadSharp.Pdf.Tests
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
 			CadDocument doc = this.getDocument();
+			var layout = doc.Layouts["Layout1"];
 
 			PdfExporter exporter = this.getPdfExporter(filename);
-			exporter.Add(doc.Layouts["Layout1"]);
+			exporter.Add(layout);
+			exporter.Close();
+		}
+
+		[Fact]
+		public void TextSample()
+		{
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "text_sample.pdf");
+			CadDocument doc = this.getDocument();
+			var layout = doc.Layouts["text_sample"];
+
+			var a = doc.Header.InsUnits;
+			var b = doc.Header.MeasurementUnits;
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(layout);
 			exporter.Close();
 		}
 

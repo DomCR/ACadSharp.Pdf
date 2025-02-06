@@ -13,3 +13,5 @@ Example PDF Files pag 707
     - Q - restore graphic stack
 
 8.6.8 Colour operators
+
+9.2.2 Basics of Showing Text
