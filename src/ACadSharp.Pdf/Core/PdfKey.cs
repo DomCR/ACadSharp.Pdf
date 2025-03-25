@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace ACadSharp.Pdf.Core
+﻿namespace ACadSharp.Pdf.Core
 {
 	public static class PdfKey
 	{
@@ -86,9 +84,9 @@ namespace ACadSharp.Pdf.Core
 		public const string TypeFont = "Tf";
 
 		/// <summary>
-		///  Move to the start of the next line, offset from the start of the current line by 
+		/// Move to the start of the next line, offset from the start of the current line by 
 		/// (tx, ty). tx and ty shall denote numbers expressed in unscaled text space
-		/// units.More precisely, this operator shall perform these assignments.
+		/// units. More precisely, this operator shall perform these assignments.
 		/// </summary>
 		public const string TextTranslation = "Td";
 
@@ -98,6 +96,17 @@ namespace ACadSharp.Pdf.Core
 		/// the text state.This operator shall have the same effect as this code: 
 		/// </summary>
 		public const string TextNextLineTranslation = "TD";
+
+		/// <summary>
+		/// Set the text matrix, Tm , and the text line matrix, Tlm.
+		/// The operands shall all be numbers, and the initial value for Tm and Tlm
+		/// shall be the identity matrix, [1 0 0 1 0 0]. Although the operands
+		/// specify a matrix, they shall be passed to Tm as six separate numbers, not 
+		/// as an array. <br/>
+		/// The matrix specified by the operands shall not be concatenated onto the
+		/// current text matrix, but shall replace it. 
+		/// </summary>
+		public const string TextMatrix = "Tm";
 
 		public const string BasicTextStart = "BT";
 		public const string BasicTextEnd = "ET";
