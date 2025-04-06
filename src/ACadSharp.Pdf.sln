@@ -26,10 +26,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{78F0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{52E48994-8A32-45F5-BB03-1D578AD6457E}"
 	ProjectSection(SolutionItems) = preProject
-		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
 		..\.github\workflows\build_n_test.yml = ..\.github\workflows\build_n_test.yml
 		..\.github\workflows\coveralls.yml = ..\.github\workflows\coveralls.yml
 		..\.github\workflows\publish.yml = ..\.github\workflows\publish.yml
+		..\.github\workflows\csharp.yml = ..\.github\workflows\csharp.yml
 		..\.github\workflows\wiki-gen.yml = ..\.github\workflows\wiki-gen.yml
 	EndProjectSection
 EndProject
