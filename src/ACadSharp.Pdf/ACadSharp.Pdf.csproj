@@ -17,7 +17,7 @@
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Version>*.*.^-beta</Version>
+		<Version>0.0.2-beta</Version>
 		<PackageOutputPath>../nupkg</PackageOutputPath>
 	</PropertyGroup>
 	
