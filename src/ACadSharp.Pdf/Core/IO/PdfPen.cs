@@ -22,13 +22,17 @@ namespace ACadSharp.Pdf.Core.IO
 		// ReSharper disable once InconsistentNaming
 		public const double κ = 0.5522847498307933984022516322796;
 
-		public PlotPaperUnits PaperUnits { get; set; }
+		public PlotPaperUnits PaperUnits { get { return this._layout.PaperUnits; } }
+
+		public double DenominatorScale { get { return this._layout.DenominatorScale; } }
 
 		private readonly StringBuilder _sb = new();
+		private readonly Layout _layout;
 		private readonly PdfConfiguration _configuration;
 
-		public PdfPen(PdfConfiguration configuration)
+		public PdfPen(Layout layout, PdfConfiguration configuration)
 		{
+			this._layout = layout;
 			this._configuration = configuration;
 		}
 
@@ -60,6 +64,9 @@ namespace ACadSharp.Pdf.Core.IO
 					break;
 				case IPolyline polyline:
 					this.drawPolyline(polyline, transform);
+					break;
+				case IText text:
+					this.drawText(text, transform);
 					break;
 				case Viewport viewport:
 					this.drawViewport(viewport);
@@ -194,6 +201,43 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.Stroke);
 		}
 
+		private void drawText(IText text, Transform transform)
+		{
+			this._sb.AppendLine(PdfKey.BasicTextStart);
+
+			this._sb.Append("/F");
+			this._sb.Append("1");   //Font id in the pdf, the font definition should be embedded
+			this._sb.Append(' ');
+			this._sb.Append(this.toPdfDouble(text.Height));
+			this._sb.Append(' ');
+			this._sb.Append(PdfKey.TypeFont);
+			this._sb.AppendLine();
+
+
+			switch (text)
+			{
+				//case MText mtext:
+				//	double spacing = 0;
+				//	XY pos = mtext.InsertPoint.Convert<XY>();
+				//	foreach (var l in mtext.GetTextLines())
+				//	{
+				//		//this.appendXY(new XY(pos.X, pos.Y - spacing), "Td");
+				//		this.appendXY(new XY(pos.X, spacing), "Td");
+				//		this._sb.AppendLine($"({l}) Tj");
+
+				//		spacing += mtext.LineSpacing;
+				//	}
+				//	break;
+				default:
+					this.appendXY(text.InsertPoint, "Td");
+					this._sb.AppendLine($"({text.Value}) Tj");
+					break;
+			}
+
+
+			this._sb.AppendLine(PdfKey.BasicTextEnd);
+		}
+
 		private void drawViewport(Viewport viewport)
 		{
 			BoundingBox box = viewport.GetBoundingBox();
@@ -256,19 +300,9 @@ namespace ACadSharp.Pdf.Core.IO
 			this.appendXY(value[0], value[1], key);
 		}
 
-		private void appendXY(XY value, string key)
-		{
-			this.appendXY(value.X, value.Y, key);
-		}
-
-		private void appendXY(XYZ value, string key)
-		{
-			this.appendXY((XY)value, key);
-		}
-
 		private string toPdfDouble(double value)
 		{
-			return value.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
 		}
 	}
 }
