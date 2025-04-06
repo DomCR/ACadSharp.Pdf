@@ -1,0 +1,72 @@
+name: CSharp
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+defaults:
+  run:
+    working-directory: ./src
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+      with: 
+        submodules: true
+        fetch-depth: 0
+    - uses: cardinalby/export-env-action@v2
+      with:
+        envFile: 'github.env'
+    - name: Init submodules
+      run: git submodule update --force --recursive --init --remote
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+
+  testDotNet:
+    name: Test Dotnet
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v4
+      with: 
+        submodules: true
+        fetch-depth: 0
+    - uses: cardinalby/export-env-action@v2
+      with:
+        envFile: 'github.env'
+    - name: Init submodules
+      run: git submodule update --force --recursive --init --remote
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test with the dotnet CLI
+      run: dotnet test --no-build --no-restore --framework net6.0
+
+  testFramework:
+    name: Test net Framework
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v4
+      with: 
+        submodules: true
+        fetch-depth: 0
+    - uses: cardinalby/export-env-action@v2
+      with:
+        envFile: 'github.env'
+    - name: Init submodules
+      run: git submodule update --force --recursive --init --remote
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test with the dotnet CLI
+      run: dotnet test --no-build --no-restore --framework net48
