@@ -24,6 +24,15 @@ namespace ACadSharp.Pdf.Tests
 		public static void CreateOutputFolders()
 		{
 			craateFolderIfDoesNotExist(OutputSamplesFolder);
+
+			string outputSamplesFolder = OutputSamplesFolder;
+
+#if NETFRAMEWORK
+			string curr = AppDomain.CurrentDomain.BaseDirectory;
+			outputSamplesFolder = Path.GetFullPath(Path.Combine(curr, OutputSamplesFolder));
+#endif
+
+			craateFolderIfDoesNotExist(outputSamplesFolder);
 		}
 
 		private static void craateFolderIfDoesNotExist(string path)
