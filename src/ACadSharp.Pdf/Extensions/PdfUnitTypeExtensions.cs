@@ -1,8 +1,27 @@
 ﻿using System.ComponentModel;
+using ACadSharp.Objects;
 using ACadSharp.Pdf.Core;
 
 namespace ACadSharp.Pdf.Extensions
 {
+	public static class PlotPaperUnitsExtensions
+	{
+		public static PdfUnitType ToPdfUnit(this PlotPaperUnits unit)
+		{
+			switch (unit)
+			{
+				case PlotPaperUnits.Inches:
+					return PdfUnitType.Inch;
+				case PlotPaperUnits.Milimeters:
+					return PdfUnitType.Millimeter;
+				case PlotPaperUnits.Pixels:
+					return PdfUnitType.Point;
+				default:
+					throw new InvalidEnumArgumentException(nameof(unit), (int)unit, typeof(PdfUnitType));
+			}
+		}
+	}
+
 	public static class PdfUnitTypeExtensions
 	{
 		public static double Transform(this PdfUnitType type, double value)
