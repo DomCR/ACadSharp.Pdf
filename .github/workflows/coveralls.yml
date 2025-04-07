@@ -36,4 +36,4 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ github.token }}
-        files: src/ACadSharp.Pdf.Tests/TestResults/coverage.net6.0.info
+        file: src/ACadSharp.Pdf.Tests/TestResults/coverage.net6.0.info
