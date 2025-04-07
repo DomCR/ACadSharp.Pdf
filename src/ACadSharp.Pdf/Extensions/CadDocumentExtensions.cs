@@ -7,6 +7,11 @@ namespace ACadSharp.Pdf.Extensions
 {
 	public static class CadDocumentExtensions
 	{
+		/// <summary>
+		/// Create a <see cref="DwgPreview"/> with a png image in it using the ModelSpace as a reference.
+		/// </summary>
+		/// <param name="document">Document to create the preview image from.</param>
+		/// <returns></returns>
 		public static DwgPreview CreatePreview(this CadDocument document)
 		{
 			MemoryStream svgStream = new MemoryStream();
