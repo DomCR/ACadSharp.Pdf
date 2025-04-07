@@ -3,19 +3,20 @@ ACadSharp.Pdf ![Build&Test](https://github.com/DomCr/ACadSharp.Pdf/actions/workf
 
 Library to generate Pdf files from dwg and dxf files read by [ACadSharp](https://github.com/DomCR/ACadSharp).
 
+# Features
+
+- Generate Pdf files from a Dwg/Dxf file read by [ACadSharp](https://github.com/DomCR/ACadSharp).
+- Generate the preview image for dwg files.
+
 # Beta status
 
 - Missing entities:
     - HATCH: 
-        - https://github.com/DomCR/ACadSharp.Pdf/pull/7
     - TEXT | MTEXT | ATT
-        - https://github.com/DomCR/ACadSharp.Pdf/pull/8
+        - missing fonts, style and multiline
     - DIMENSIONS
-        - https://github.com/DomCR/ACadSharp.Pdf/pull/9
     - INSERT
-        - https://github.com/DomCR/ACadSharp.Pdf/pull/10
     - UNDERLAY | PDF | IMAGE
-        - https://github.com/DomCR/ACadSharp.Pdf/pull/11
     - MLINE
     - MULTILEADER
     - RAY
