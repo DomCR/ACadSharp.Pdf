@@ -8,7 +8,6 @@ namespace ACadSharp.Pdf.Tests
 {
 	public class PdfExporterTests
 	{
-		private CadDocument _document;
 		private readonly ITestOutputHelper _output;
 
 		public PdfExporterTests(ITestOutputHelper output)
@@ -20,7 +19,7 @@ namespace ACadSharp.Pdf.Tests
 		public void AddModelSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
-			CadDocument doc = this.getDocument();
+			CadDocument doc = TestUtils.GetDocument();
 
 			PdfExporter exporter = this.getPdfExporter(filename);
 			exporter.AddModelSpace(doc);
@@ -31,7 +30,7 @@ namespace ACadSharp.Pdf.Tests
 		public void AddLayoutTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
-			CadDocument doc = this.getDocument();
+			CadDocument doc = TestUtils.GetDocument();
 			var layout = doc.Layouts["Layout1"];
 
 			PdfExporter exporter = this.getPdfExporter(filename);
@@ -43,7 +42,7 @@ namespace ACadSharp.Pdf.Tests
 		public void TextSample()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "text_sample.pdf");
-			CadDocument doc = this.getDocument();
+			CadDocument doc = TestUtils.GetDocument();
 			var layout = doc.Layouts["text_sample"];
 
 			var a = doc.Header.InsUnits;
@@ -58,7 +57,7 @@ namespace ACadSharp.Pdf.Tests
 		public void AddBlockTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "my_block.pdf");
-			CadDocument doc = this.getDocument();
+			CadDocument doc = TestUtils.GetDocument();
 
 			PdfExporter exporter = this.getPdfExporter(filename);
 			exporter.Add(doc.BlockRecords["my_block"]);
@@ -72,15 +71,6 @@ namespace ACadSharp.Pdf.Tests
 			exporter.Configuration.OnNotification += this.onNotification;
 
 			return exporter;
-		}
-
-		private CadDocument getDocument()
-		{
-			if (this._document == null)
-			{
-				this._document = DwgReader.Read(Path.Combine(TestVariables.SamplesFolder, "export_sample.dwg"));
-			}
-			return this._document;
 		}
 
 		private void onNotification(object sender, NotificationEventArgs e)

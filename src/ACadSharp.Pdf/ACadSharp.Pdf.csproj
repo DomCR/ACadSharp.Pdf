@@ -36,6 +36,10 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Svg" Version="3.4.7" />
+	</ItemGroup>
+
 	<Import Project="..\ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems" Label="Shared" />
 
 </Project>
