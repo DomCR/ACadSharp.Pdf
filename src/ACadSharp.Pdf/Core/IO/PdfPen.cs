@@ -152,7 +152,6 @@ namespace ACadSharp.Pdf.Core.IO
 		private void drawEllpise(Ellipse ellipse, Transform transform)
 		{
 			XY[] vertices = ellipse.PolygonalVertexes(this._configuration.ArcPrecision)
-				.Select(v => v + ellipse.Center)
 				.Select(v => transform.ApplyTransform(v))
 				.Select(v => v.Convert<XY>())
 				.ToArray();
