@@ -70,8 +70,7 @@ namespace ACadSharp.Pdf
 		public double GetLineWeightValue(LineweightType lineWeight)
 		{
 			double value = 0.0d;
-			if (this.LineWeightValues.TryGetValue(lineWeight, out value)
-				|| LineWeightDefaultValues.TryGetValue(lineWeight, out value))
+			if (LineWeightDefaultValues.TryGetValue(lineWeight, out value))
 			{
 				return value;
 			}

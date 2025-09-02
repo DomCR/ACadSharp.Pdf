@@ -15,6 +15,10 @@ namespace ACadSharp.Pdf.Core.IO
 {
 	internal class PdfPen
 	{
+		public double DenominatorScale { get { return this._layout.DenominatorScale; } }
+
+		public PlotPaperUnits PaperUnits { get { return this._layout.PaperUnits; } }
+
 		// The κ (kappa) for drawing a circle or an ellipse with four Bézier splines, specifying the
 		// distance of the influence point from the starting or end point of a spline.
 		// Petzold: 4/3 * tan(α / 4)
@@ -22,13 +26,11 @@ namespace ACadSharp.Pdf.Core.IO
 		// ReSharper disable once InconsistentNaming
 		public const double κ = 0.5522847498307933984022516322796;
 
-		public PlotPaperUnits PaperUnits { get { return this._layout.PaperUnits; } }
+		private readonly PdfConfiguration _configuration;
 
-		public double DenominatorScale { get { return this._layout.DenominatorScale; } }
+		private readonly Layout _layout;
 
 		private readonly StringBuilder _sb = new();
-		private readonly Layout _layout;
-		private readonly PdfConfiguration _configuration;
 
 		public PdfPen(Layout layout, PdfConfiguration configuration)
 		{
@@ -43,6 +45,8 @@ namespace ACadSharp.Pdf.Core.IO
 
 		public void DrawEntity(Entity entity, Transform transform)
 		{
+			this.writeEntityHeader(entity);
+
 			this.applyStyle(entity);
 
 			switch (entity)
@@ -75,11 +79,41 @@ namespace ACadSharp.Pdf.Core.IO
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
 			}
+
+			this.writeEntityEnd(entity);
 		}
 
 		public override string ToString()
 		{
 			return _sb.ToString();
+		}
+
+		private void appendArray(string key, params double[] arr)
+		{
+			this._sb.AppendJoin(" ", arr.Select(d => this.toPdfDouble(d)));
+			this._sb.AppendLine($" {key}");
+		}
+
+		private void appendPath(params XY[] vertices)
+		{
+			this.appendXY(vertices.First(), PdfKey.BeginPath);
+
+			for (int i = 1; vertices.Count() > i; i++)
+			{
+				this.appendXY(vertices[i], PdfKey.Line);
+			}
+
+			this.appendXY(vertices.Last(), PdfKey.Stroke);
+		}
+
+		private void appendXY(double x, double y, string key)
+		{
+			this._sb.AppendLine($"{this.toPdfDouble(x)} {this.toPdfDouble(y)} {key}");
+		}
+
+		private void appendXY(IVector value, string key)
+		{
+			this.appendXY(value[0], value[1], key);
 		}
 
 		private void applyStyle(Entity entity)
@@ -93,6 +127,9 @@ namespace ACadSharp.Pdf.Core.IO
 					break;
 				case LineweightType.ByLayer:
 					lw = entity.Layer.LineWeight;
+					break;
+				default:
+					lw = entity.LineWeight;
 					break;
 			}
 
@@ -212,7 +249,6 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.Append(PdfKey.TypeFont);
 			this._sb.AppendLine();
 
-
 			switch (text)
 			{
 				//case MText mtext:
@@ -232,7 +268,6 @@ namespace ACadSharp.Pdf.Core.IO
 					this._sb.AppendLine($"({text.Value}) Tj");
 					break;
 			}
-
 
 			this._sb.AppendLine(PdfKey.BasicTextEnd);
 		}
@@ -271,37 +306,19 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.StackEnd);
 		}
 
-		private void appendPath(params XY[] vertices)
-		{
-			this.appendXY(vertices.First(), PdfKey.BeginPath);
-
-			for (int i = 1; vertices.Count() > i; i++)
-			{
-				this.appendXY(vertices[i], PdfKey.Line);
-			}
-
-			this.appendXY(vertices.Last(), PdfKey.Stroke);
-		}
-
-		private void appendArray(string key, params double[] arr)
-		{
-			this._sb.AppendJoin(" ", arr.Select(d => this.toPdfDouble(d)));
-			this._sb.AppendLine($" {key}");
-		}
-
-		private void appendXY(double x, double y, string key)
-		{
-			this._sb.AppendLine($"{this.toPdfDouble(x)} {this.toPdfDouble(y)} {key}");
-		}
-
-		private void appendXY(IVector value, string key)
-		{
-			this.appendXY(value[0], value[1], key);
-		}
-
 		private string toPdfDouble(double value)
 		{
 			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+		}
+
+		private void writeEntityEnd(Entity entity)
+		{
+			_sb.AppendLine(PdfKey.CommentSeparator);
+		}
+
+		private void writeEntityHeader(Entity entity)
+		{
+			_sb.AppendLine($"% {entity.ObjectName} | {entity.Handle}");
 		}
 	}
 }
