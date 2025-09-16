@@ -9,34 +9,34 @@ namespace ACadSharp.Pdf
 		/// <summary>
 		/// Line weight default values.
 		/// </summary>
-		public static readonly IReadOnlyDictionary<LineweightType, double> LineWeightDefaultValues =
-			new Dictionary<LineweightType, double>()
+		public static readonly IReadOnlyDictionary<LineWeightType, double> LineWeightDefaultValues =
+			new Dictionary<LineWeightType, double>()
 		{
-			{ LineweightType.Default, 0 },
-			{ LineweightType.W0, 0.001 },
-			{ LineweightType.W5, 0.05 },
-			{ LineweightType.W9, 0.09 },
-			{ LineweightType.W13, 0.13 },
-			{ LineweightType.W15, 0.15 },
-			{ LineweightType.W18, 0.18 },
-			{ LineweightType.W20, 0.20 },
-			{ LineweightType.W25, 0.25 },
-			{ LineweightType.W30, 0.30 },
-			{ LineweightType.W35, 0.35 },
-			{ LineweightType.W40, 0.40 },
-			{ LineweightType.W50, 0.50 },
-			{ LineweightType.W53, 0.53 },
-			{ LineweightType.W60, 0.60 },
-			{ LineweightType.W70, 0.70 },
-			{ LineweightType.W80, 0.80 },
-			{ LineweightType.W90, 0.90 },
-			{ LineweightType.W100, 1.00 },
-			{ LineweightType.W106, 1.06 },
-			{ LineweightType.W120, 1.20 },
-			{ LineweightType.W140, 1.40 },
-			{ LineweightType.W158, 1.58 },
-			{ LineweightType.W200, 2.00 },
-			{ LineweightType.W211, 2.11 },
+			{ LineWeightType.Default, 0 },
+			{ LineWeightType.W0, 0.001 },
+			{ LineWeightType.W5, 0.05 },
+			{ LineWeightType.W9, 0.09 },
+			{ LineWeightType.W13, 0.13 },
+			{ LineWeightType.W15, 0.15 },
+			{ LineWeightType.W18, 0.18 },
+			{ LineWeightType.W20, 0.20 },
+			{ LineWeightType.W25, 0.25 },
+			{ LineWeightType.W30, 0.30 },
+			{ LineWeightType.W35, 0.35 },
+			{ LineWeightType.W40, 0.40 },
+			{ LineWeightType.W50, 0.50 },
+			{ LineWeightType.W53, 0.53 },
+			{ LineWeightType.W60, 0.60 },
+			{ LineWeightType.W70, 0.70 },
+			{ LineWeightType.W80, 0.80 },
+			{ LineWeightType.W90, 0.90 },
+			{ LineWeightType.W100, 1.00 },
+			{ LineWeightType.W106, 1.06 },
+			{ LineWeightType.W120, 1.20 },
+			{ LineWeightType.W140, 1.40 },
+			{ LineWeightType.W158, 1.58 },
+			{ LineWeightType.W200, 2.00 },
+			{ LineWeightType.W211, 2.11 },
 		};
 
 		/// <summary>
@@ -65,9 +65,9 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public string DecimalFormat { get; set; } = "0.####";
 
-		public Dictionary<LineweightType, double> LineWeightValues { get; set; } = new();
+		public Dictionary<LineWeightType, double> LineWeightValues { get; set; } = new();
 
-		public double GetLineWeightValue(LineweightType lineWeight)
+		public double GetLineWeightValue(LineWeightType lineWeight)
 		{
 			double value = 0.0d;
 			if (LineWeightDefaultValues.TryGetValue(lineWeight, out value))
