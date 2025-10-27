@@ -1,8 +1,11 @@
 ﻿using ACadSharp.Entities;
+using ACadSharp.Extensions;
 using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
+using ACadSharp.Tables;
 using CSMath;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -118,33 +121,11 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void applyStyle(Entity entity)
 		{
-			LineWeightType lw = LineWeightType.Default;
-			switch (entity.LineWeight)
-			{
-				case LineWeightType.ByDIPs:
-					break;
-				case LineWeightType.ByBlock:
-					break;
-				case LineWeightType.ByLayer:
-					lw = entity.Layer.LineWeight;
-					break;
-				default:
-					lw = entity.LineWeight;
-					break;
-			}
-
-			double lwValue = this._configuration.GetLineWeightValue(lw);
+			LineWeightType lw = entity.GetActiveLineWeightType();
+			double lwValue = lw.GetLineWeightValue();
 			this._sb.AppendLine($"{lwValue.ToPdfUnit(PdfUnitType.Millimeter)} {PdfKey.LineWidth}");
 
-			Color color;
-			if (entity.Color.IsByLayer)
-			{
-				color = entity.Layer.Color;
-			}
-			else
-			{
-				color = entity.Color;
-			}
+			Color color = entity.GetActiveColor();
 
 			if (color.Index == 7)
 			{
@@ -152,6 +133,42 @@ namespace ACadSharp.Pdf.Core.IO
 			}
 
 			this._sb.AppendLine(color.ToPdfString());
+
+			LineType lt = entity.GetActiveLineType();
+			if (this.drawableLineType(lt))
+			{
+				this.writeDashes(entity.GetActiveLineType(), lwValue.ToPdfUnit(PdfUnitType.Millimeter));
+			}
+			else
+			{
+				this._sb.AppendLine("[] 0 d");
+			}
+		}
+
+		private void writeDashes(LineType lineType, double pointSize)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("[");
+			foreach (LineType.Segment segment in lineType.Segments)
+			{
+				if (segment.IsPoint)
+				{
+					sb.Append(toPdfDouble(pointSize));
+				}
+				else
+				{
+					sb.Append(toPdfDouble(Math.Abs(segment.Length)));
+				}
+
+				sb.Append(' ');
+			}
+
+			this._sb.AppendLine($"{sb.ToString().Trim()}] 0 d");
+		}
+
+		private bool drawableLineType(LineType lineType)
+		{
+			return lineType.IsComplex && !lineType.Segments.Any(s => s.IsShape);
 		}
 
 		private void drawArc(Arc arc, Transform transform)
