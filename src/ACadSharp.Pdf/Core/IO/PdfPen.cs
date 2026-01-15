@@ -1,8 +1,11 @@
 ﻿using ACadSharp.Entities;
+using ACadSharp.Extensions;
 using ACadSharp.IO;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Extensions;
+using ACadSharp.Tables;
 using CSMath;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +18,10 @@ namespace ACadSharp.Pdf.Core.IO
 {
 	internal class PdfPen
 	{
+		public double DenominatorScale { get { return this._layout.DenominatorScale; } }
+
+		public PlotPaperUnits PaperUnits { get { return this._layout.PaperUnits; } }
+
 		// The κ (kappa) for drawing a circle or an ellipse with four Bézier splines, specifying the
 		// distance of the influence point from the starting or end point of a spline.
 		// Petzold: 4/3 * tan(α / 4)
@@ -22,13 +29,15 @@ namespace ACadSharp.Pdf.Core.IO
 		// ReSharper disable once InconsistentNaming
 		public const double κ = 0.5522847498307933984022516322796;
 
-		public PlotPaperUnits PaperUnits { get; set; }
-
-		private readonly StringBuilder _sb = new();
 		private readonly PdfConfiguration _configuration;
 
-		public PdfPen(PdfConfiguration configuration)
+		private readonly Layout _layout;
+
+		private readonly StringBuilder _sb = new();
+
+		public PdfPen(Layout layout, PdfConfiguration configuration)
 		{
+			this._layout = layout;
 			this._configuration = configuration;
 		}
 
@@ -39,6 +48,8 @@ namespace ACadSharp.Pdf.Core.IO
 
 		public void DrawEntity(Entity entity, Transform transform)
 		{
+			this.writeEntityHeader(entity);
+
 			this.applyStyle(entity);
 
 			switch (entity)
@@ -64,6 +75,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case IPolyline polyline:
 					this.drawPolyline(polyline, transform);
 					break;
+				case IText text:
+					this.drawText(text, transform);
+					break;
 				case Viewport viewport:
 					this.drawViewport(viewport);
 					break;
@@ -71,6 +85,8 @@ namespace ACadSharp.Pdf.Core.IO
 					this._configuration.Notify($"[{entity.SubclassMarker}] Drawing not implemented.", NotificationType.NotImplemented);
 					break;
 			}
+
+			this.writeEntityEnd(entity);
 		}
 
 		public override string ToString()
@@ -78,32 +94,41 @@ namespace ACadSharp.Pdf.Core.IO
 			return _sb.ToString();
 		}
 
+		private void appendArray(string key, params double[] arr)
+		{
+			this._sb.AppendJoin(" ", arr.Select(d => this.toPdfDouble(d)));
+			this._sb.AppendLine($" {key}");
+		}
+
+		private void appendPath(params XY[] vertices)
+		{
+			this.appendXY(vertices[0], PdfKey.BeginPath);
+
+			for (int i = 1; vertices.Length > i; i++)
+			{
+				this.appendXY(vertices[i], PdfKey.Line);
+			}
+
+			this.appendXY(vertices[vertices.Length - 1], PdfKey.Stroke);
+		}
+
+		private void appendXY(double x, double y, string key)
+		{
+			this._sb.AppendLine($"{this.toPdfDouble(x)} {this.toPdfDouble(y)} {key}");
+		}
+
+		private void appendXY(IVector value, string key)
+		{
+			this.appendXY(value[0], value[1], key);
+		}
+
 		private void applyStyle(Entity entity)
 		{
-			LineweightType lw = LineweightType.Default;
-			switch (entity.LineWeight)
-			{
-				case LineweightType.ByDIPs:
-					break;
-				case LineweightType.ByBlock:
-					break;
-				case LineweightType.ByLayer:
-					lw = entity.Layer.LineWeight;
-					break;
-			}
-
-			double lwValue = this._configuration.GetLineWeightValue(lw);
+			LineWeightType lw = entity.GetActiveLineWeightType();
+			double lwValue = lw.GetLineWeightValue();
 			this._sb.AppendLine($"{lwValue.ToPdfUnit(PdfUnitType.Millimeter)} {PdfKey.LineWidth}");
 
-			Color color;
-			if (entity.Color.IsByLayer)
-			{
-				color = entity.Layer.Color;
-			}
-			else
-			{
-				color = entity.Color;
-			}
+			Color color = entity.GetActiveColor();
 
 			if (color.Index == 7)
 			{
@@ -111,13 +136,49 @@ namespace ACadSharp.Pdf.Core.IO
 			}
 
 			this._sb.AppendLine(color.ToPdfString());
+
+			LineType lt = entity.GetActiveLineType();
+			if (this.drawableLineType(lt))
+			{
+				this.writeDashes(entity.GetActiveLineType(), lwValue.ToPdfUnit(PdfUnitType.Millimeter));
+			}
+			else
+			{
+				this._sb.AppendLine("[] 0 d");
+			}
+		}
+
+		private void writeDashes(LineType lineType, double pointSize)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("[");
+			foreach (LineType.Segment segment in lineType.Segments)
+			{
+				if (segment.IsPoint)
+				{
+					sb.Append(toPdfDouble(pointSize));
+				}
+				else
+				{
+					sb.Append(toPdfDouble(Math.Abs(segment.Length)));
+				}
+
+				sb.Append(' ');
+			}
+
+			this._sb.AppendLine($"{sb.ToString().Trim()}] 0 d");
+		}
+
+		private bool drawableLineType(LineType lineType)
+		{
+			return lineType.IsComplex && !lineType.HasShapes;
 		}
 
 		private void drawArc(Arc arc, Transform transform)
 		{
 			XY[] vertices = arc.PolygonalVertexes(this._configuration.ArcPrecision)
-				.Select(v => transform.ApplyTransform((XYZ)v))
-				.Select(v => (XY)v)
+				.Select(v => transform.ApplyTransform(v))
+				.Select(v => v.Convert<XY>())
 				.ToArray();
 
 			this.appendPath(vertices);
@@ -148,9 +209,8 @@ namespace ACadSharp.Pdf.Core.IO
 		private void drawEllpise(Ellipse ellipse, Transform transform)
 		{
 			XY[] vertices = ellipse.PolygonalVertexes(this._configuration.ArcPrecision)
-				.Select(v => v + (XY)ellipse.Center)
-				.Select(v => transform.ApplyTransform((XYZ)v))
-				.Select(v => (XY)v)
+				.Select(v => transform.ApplyTransform(v))
+				.Select(v => v.Convert<XY>())
 				.ToArray();
 
 			this.appendPath(vertices);
@@ -180,7 +240,8 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawPolyline(IPolyline polyline, Transform transform)
 		{
-			IEnumerable<XYZ> vertices = polyline.Vertices.Select(v => transform.ApplyTransform(v.Location.Convert<XYZ>()));
+			IEnumerable<XYZ> vertices = polyline.GetPoints<XYZ>(this._configuration.ArcPrecision)
+				.Select(v => v = transform.ApplyTransform(v));
 
 			this.appendXY(vertices.First(), PdfKey.BeginPath);
 
@@ -200,6 +261,37 @@ namespace ACadSharp.Pdf.Core.IO
 			}
 
 			this._sb.AppendLine(PdfKey.Stroke);
+		}
+
+		private void drawText(IText text, Transform transform)
+		{
+			this._sb.AppendLine(PdfKey.BasicTextStart);
+
+			this._sb.Append("/F");
+			this._sb.Append("1");   //Font id in the pdf, the font definition should be embedded
+			this._sb.Append(' ');
+			this._sb.Append(this.toPdfDouble(text.Height));
+			this._sb.Append(' ');
+			this._sb.Append(PdfKey.TypeFont);
+			this._sb.AppendLine();
+
+			this.appendXY(text.InsertPoint, "Td");
+
+			switch (text)
+			{
+				case MText mtext:
+					this._sb.AppendLine($"{this.toPdfDouble(text.Height)} TL");
+					foreach (var l in mtext.GetTextLines())
+					{
+						this._sb.AppendLine($"T* ({l}) {PdfKey.TextString}");
+					}
+					break;
+				default:
+					this._sb.AppendLine($"({text.Value}) {PdfKey.TextString}");
+					break;
+			}
+
+			this._sb.AppendLine(PdfKey.BasicTextEnd);
 		}
 
 		private void drawViewport(Viewport viewport)
@@ -236,47 +328,19 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.StackEnd);
 		}
 
-		private void appendPath(params XY[] vertices)
-		{
-			this.appendXY(vertices.First(), PdfKey.BeginPath);
-
-			for (int i = 1; vertices.Count() > i; i++)
-			{
-				this.appendXY(vertices[i], PdfKey.Line);
-			}
-
-			this.appendXY(vertices.Last(), PdfKey.Stroke);
-		}
-
-		private void appendArray(string key, params double[] arr)
-		{
-			this._sb.AppendJoin(" ", arr.Select(d => this.toPdfDouble(d)));
-			this._sb.AppendLine($" {key}");
-		}
-
-		private void appendXY(double x, double y, string key)
-		{
-			this._sb.AppendLine($"{this.toPdfDouble(x)} {this.toPdfDouble(y)} {key}");
-		}
-
-		private void appendXY(IVector value, string key)
-		{
-			this.appendXY(value[0], value[1], key);
-		}
-
-		private void appendXY(XY value, string key)
-		{
-			this.appendXY(value.X, value.Y, key);
-		}
-
-		private void appendXY(XYZ value, string key)
-		{
-			this.appendXY((XY)value, key);
-		}
-
 		private string toPdfDouble(double value)
 		{
-			return value.ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+		}
+
+		private void writeEntityEnd(Entity entity)
+		{
+			_sb.AppendLine(PdfKey.CommentSeparator);
+		}
+
+		private void writeEntityHeader(Entity entity)
+		{
+			_sb.AppendLine($"% {entity.ObjectName} | {entity.Handle}");
 		}
 	}
 }

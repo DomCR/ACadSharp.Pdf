@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0;net48;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0;net9.0;net48;netstandard2.1</TargetFrameworks>
 		<Authors>DomCr</Authors>
 		<PackageId>ACadSharp.Pdf</PackageId>
 		<PackageTags>C# Dwg Dxf Pdf</PackageTags>
@@ -17,8 +17,10 @@
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Version>0.0.1-beta</Version>
+		<Version>0.1.5-beta</Version>
 		<PackageOutputPath>../nupkg</PackageOutputPath>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>../ACadSharp.Pdf.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 	
 	<ItemGroup Condition="'$(Configuration)' != 'Release'">
@@ -26,7 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<PackageReference Include="ACadSharp" Version="*" />
+		<PackageReference Include="ACadSharp" Version="3.3.*" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,6 +36,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Svg" Version="3.4.7" />
 	</ItemGroup>
 
 	<Import Project="..\ACadSharp\src\CSUtilities\CSUtilities\CSUtilities.projitems" Label="Shared" />
