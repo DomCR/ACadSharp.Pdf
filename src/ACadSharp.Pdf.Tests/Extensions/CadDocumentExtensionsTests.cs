@@ -12,9 +12,15 @@ namespace ACadSharp.Pdf.Tests.Extensions
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "preview.dwg");
 			CadDocument doc = TestUtils.GetDocument();
+			DwgPreview preview = doc.CreatePreview();
+
+			Assert.Equal(DwgPreview.PreviewType.Png, preview.Code);
+			Assert.NotNull(preview.RawImage);
+			Assert.NotEmpty(preview.RawImage);
+
 			using (DwgWriter writer = new DwgWriter(filename, doc))
 			{
-				writer.Preview = doc.CreatePreview();
+				writer.Preview = preview;
 				writer.Write();
 			}
 		}

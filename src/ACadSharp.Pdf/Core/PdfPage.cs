@@ -4,7 +4,6 @@ using ACadSharp.Pdf.Extensions;
 using ACadSharp.Tables;
 using CSMath;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ACadSharp.Pdf.Core
 {
@@ -112,14 +111,51 @@ namespace ACadSharp.Pdf.Core
 		/// </summary>
 		public void UpdateLayoutSize()
 		{
-			BoundingBox limits = BoundingBox.Merge(this.Entities.Select(e => e.GetBoundingBox()));
+			BoundingBox limits = BoundingBox.Null;
+			foreach (Entity entity in this.Entities)
+			{
+				if (entity == null)
+				{
+					continue;
+				}
+
+				BoundingBox box = entity.GetBoundingBox();
+				if (box.Extent != BoundingBoxExtent.Finite && box.Extent != BoundingBoxExtent.Point)
+				{
+					continue;
+				}
+
+				if (!isFinite(box.Min.X) || !isFinite(box.Min.Y) || !isFinite(box.Max.X) || !isFinite(box.Max.Y))
+				{
+					continue;
+				}
+
+				limits = limits.Merge(box);
+			}
+
+			if (limits.Extent == BoundingBoxExtent.Null)
+			{
+				this.Contents.Translation = XY.Zero;
+				return;
+			}
 
 			this.Contents.Translation = -(XY)limits.Min;
-
 			limits = limits.Move(-limits.Min);
 
-			this.Layout.PaperWidth = limits.Max.X;
-			this.Layout.PaperHeight = limits.Max.Y;
+			if (isFinite(limits.Max.X) && limits.Max.X > 0.0)
+			{
+				this.Layout.PaperWidth = limits.Max.X;
+			}
+
+			if (isFinite(limits.Max.Y) && limits.Max.Y > 0.0)
+			{
+				this.Layout.PaperHeight = limits.Max.Y;
+			}
+		}
+
+		private static bool isFinite(double value)
+		{
+			return !double.IsNaN(value) && !double.IsInfinity(value);
 		}
 	}
 }

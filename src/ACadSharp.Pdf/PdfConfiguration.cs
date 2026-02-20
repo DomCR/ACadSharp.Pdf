@@ -65,6 +65,55 @@ namespace ACadSharp.Pdf
 		/// </summary>
 		public string DecimalFormat { get; set; } = "0.####";
 
+		/// <summary>
+		/// Enable the Stage 00 scene-graph rendering pipeline (IR → flatten → PDF).
+		/// </summary>
+		/// <remarks>
+		/// This is disabled by default to keep A/B parity with the legacy <see cref="Core.IO.PdfPen"/> pipeline.
+		/// </remarks>
+		public bool UseSceneGraph { get; set; } = false;
+
+		/// <summary>
+		/// Render log produced by the most recent scene-graph render.
+		/// </summary>
+		public Core.Render.RenderLog LastRenderLog { get; internal set; } = null;
+
+		/// <summary>
+		/// Optional SHX-to-TTF font substitution overrides used by the Stage 02 text layout engine.
+		/// </summary>
+		public Dictionary<string, string> ShxFontSubstitutions { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+		/// <summary>
+		/// Optional base directory used to resolve relative IMAGE/PDFUNDERLAY references.
+		/// </summary>
+		public string BasePath { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Maximum memory budget for external IMAGE/PDFUNDERLAY raster cache (in MB).
+		/// </summary>
+		public int MaxImageCacheMemoryMB { get; set; } = 256;
+
+		/// <summary>
+		/// Maximum pixel dimension for loaded/rasterized external images (width/height clamp).
+		/// </summary>
+		public int MaxRasterPixelDimension { get; set; } = 4096;
+
+		/// <summary>
+		/// Rasterization DPI used for PDFUNDERLAY entities.
+		/// </summary>
+		public int PdfUnderlayDpi { get; set; } = 150;
+
+		/// <summary>
+		/// If true, missing external references are skipped; otherwise they are reported as render errors.
+		/// </summary>
+		public bool SkipMissingImages { get; set; } = true;
+
+		/// <summary>
+		/// Optional path remapping for external IMAGE/PDFUNDERLAY references.
+		/// Keys may be full referenced paths or file names.
+		/// </summary>
+		public Dictionary<string, string> ImagePathOverrides { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
 		public Dictionary<LineWeightType, double> LineWeightValues { get; set; } = new();
 
 		public double GetLineWeightValue(LineWeightType lineWeight)

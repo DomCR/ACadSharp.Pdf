@@ -1,6 +1,7 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
 using ACadSharp.Pdf.Core.IO;
+using ACadSharp.Pdf.Core.Render.SceneGraph;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
 using System.Collections.Generic;
@@ -41,25 +42,35 @@ namespace ACadSharp.Pdf.Core
 
 		private string createDrawingString(PdfConfiguration configuration)
 		{
-			PdfPen pen = new PdfPen(this.Layout, configuration);
-
 			this._sb.Clear();
 
 			this._sb.AppendLine(PdfKey.StreamStart);
 
 			this.writeStackStart();
 
-			foreach (Viewport v in this.Owner.Viewports)
+			if (configuration.UseSceneGraph)
 			{
-				pen.DrawEntity(v);
+				var pipeline = new SceneGraphPdfPipeline(this.Layout, configuration);
+				string ops = pipeline.Render(this.Owner.Viewports, this.Owner.Entities, out var log);
+				configuration.LastRenderLog = log;
+				this._sb.Append(ops);
 			}
-
-			foreach (Entity e in this.Owner.Entities)
+			else
 			{
-				pen.DrawEntity(e);
-			}
+				PdfPen pen = new PdfPen(this.Layout, configuration);
 
-			this._sb.Append(pen.ToString());
+				foreach (Viewport v in this.Owner.Viewports)
+				{
+					pen.DrawEntity(v);
+				}
+
+				foreach (Entity e in this.Owner.Entities)
+				{
+					pen.DrawEntity(e);
+				}
+
+				this._sb.Append(pen.ToString());
+			}
 
 			this.writeStackEnd();
 

@@ -1,6 +1,7 @@
 ﻿using ACadSharp.IO;
-using Svg;
-using System.Drawing.Imaging;
+using SkiaSharp;
+using Svg.Skia;
+using System;
 using System.IO;
 
 namespace ACadSharp.Pdf.Extensions
@@ -14,22 +15,43 @@ namespace ACadSharp.Pdf.Extensions
 		/// <returns></returns>
 		public static DwgPreview CreatePreview(this CadDocument document)
 		{
-			MemoryStream svgStream = new MemoryStream();
-			using (SvgWriter writer = new SvgWriter(svgStream, document))
+			byte[] svgBytes;
+			using (MemoryStream svgStream = new MemoryStream())
 			{
-				writer.Write();
+				using (SvgWriter writer = new SvgWriter(svgStream, document))
+				{
+					writer.Write();
+					svgBytes = svgStream.ToArray();
+				}
 			}
 
-			var svg = SvgDocument.Open<SvgDocument>(new MemoryStream(svgStream.GetBuffer()));
-			svg.Transforms.Clear();
+			SKSvg svg = new SKSvg();
+			using MemoryStream input = new MemoryStream(svgBytes);
+			SKPicture picture = svg.Load(input);
+			if (picture == null)
+			{
+				throw new InvalidOperationException("Unable to rasterize preview: SVG payload could not be loaded.");
+			}
 
-			var bitmap = svg.Draw();
-			bitmap.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipX);
+			SKRect bounds = picture.CullRect;
+			int width = Math.Max(1, (int)Math.Ceiling(bounds.Width));
+			int height = Math.Max(1, (int)Math.Ceiling(bounds.Height));
 
-			MemoryStream imageStream = new MemoryStream();
-			bitmap.Save(imageStream, ImageFormat.Png);
+			using SKSurface surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
+			SKCanvas canvas = surface.Canvas;
+			canvas.Clear(SKColors.Transparent);
 
-			return new DwgPreview(DwgPreview.PreviewType.Png, new byte[80], imageStream.GetBuffer());
+			// Keep parity with previous output orientation (Rotate180 + FlipX == vertical flip).
+			canvas.Translate(0, height);
+			canvas.Scale(1f, -1f);
+			canvas.DrawPicture(picture);
+			canvas.Flush();
+
+			using SKImage image = surface.Snapshot();
+			using SKData data = image.Encode(SKEncodedImageFormat.Png, quality: 100);
+			byte[] imageBytes = data.ToArray();
+
+			return new DwgPreview(DwgPreview.PreviewType.Png, new byte[80], imageBytes);
 		}
 	}
 }
