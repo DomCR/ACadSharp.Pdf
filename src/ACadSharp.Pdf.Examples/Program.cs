@@ -5,21 +5,21 @@ namespace ACadSharp.Pdf.Examples
 {
 	internal class Program
 	{
-		private const string _folder = "..\\\\..\\\\..\\\\..\\\\..\\\\samples";
-		private const string _outFolder = "..\\\\..\\\\..\\\\..\\\\..\\\\samples\\\\out";
+		const string _file = "../../../../../samples/export_sample.dwg";
 
 		static void Main(string[] args)
 		{
-			CadDocument doc = DwgReader.Read(Path.Combine(_folder, "export_sample.dwg"), NotificationHelper.LogConsoleNotification);
+			CadDocument doc = DwgReader.Read(_file, NotificationHelper.LogConsoleNotification);
 
-			string filename = Path.Combine(_folder, "export_sample_output.pdf");
+			string filename = Path.ChangeExtension(_file, ".pdf");
 
 			PdfExporter exporter = new PdfExporter(filename);
+			exporter.Configuration.OnNotification += NotificationHelper.LogConsoleNotification;
 
-			//exporter.OnNotification += NotificationHelper.LogConsoleNotification;
-
+			//Add the model space as a page
 			exporter.Add(doc.ModelSpace);
 
+			//Save and close the pdf
 			exporter.Close();
 		}
 	}

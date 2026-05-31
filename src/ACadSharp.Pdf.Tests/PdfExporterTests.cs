@@ -1,6 +1,5 @@
 using ACadSharp.IO;
 using System.IO;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -8,8 +7,26 @@ namespace ACadSharp.Pdf.Tests
 {
 	public class PdfExporterTests
 	{
-		private CadDocument _document;
+		public static CadDocument Document { get; }
+
+		public static readonly TheoryData<string> LayoutNames = new();
+
 		private readonly ITestOutputHelper _output;
+
+		static PdfExporterTests()
+		{
+			Document = TestUtils.GetDocument();
+
+			foreach (var item in Document.Layouts)
+			{
+				if (!item.IsPaperSpace)
+				{
+					continue;
+				}
+
+				LayoutNames.Add(item.Name);
+			}
+		}
 
 		public PdfExporterTests(ITestOutputHelper output)
 		{
@@ -17,35 +34,36 @@ namespace ACadSharp.Pdf.Tests
 		}
 
 		[Fact]
+		public void AddBlockTest()
+		{
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "my_block.pdf");
+			CadDocument doc = TestUtils.GetDocument();
+
+			PdfExporter exporter = this.getPdfExporter(filename);
+			exporter.Add(doc.BlockRecords["my_block"]);
+			exporter.Close();
+		}
+
+		[Fact]
 		public void AddModelSpaceTest()
 		{
 			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "model.pdf");
-			CadDocument doc = this.getDocument();
+			CadDocument doc = TestUtils.GetDocument();
 
 			PdfExporter exporter = this.getPdfExporter(filename);
 			exporter.AddModelSpace(doc);
 			exporter.Close();
 		}
 
-		[Fact]
-		public void AddLayoutTest()
+		[Theory]
+		[MemberData(nameof(LayoutNames))]
+		public void WriteLayouts(string name)
 		{
-			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "paper.pdf");
-			CadDocument doc = this.getDocument();
+			string filename = Path.Combine(TestVariables.OutputSamplesFolder, $"{name}.pdf");
+			var layout = Document.Layouts[name];
 
 			PdfExporter exporter = this.getPdfExporter(filename);
-			exporter.Add(doc.Layouts["Layout1"]);
-			exporter.Close();
-		}
-
-		[Fact]
-		public void AddBlockTest()
-		{
-			string filename = Path.Combine(TestVariables.OutputSamplesFolder, "my_block.pdf");
-			CadDocument doc = this.getDocument();
-
-			PdfExporter exporter = this.getPdfExporter(filename);
-			exporter.Add(doc.BlockRecords["my_block"]);
+			exporter.Add(layout);
 			exporter.Close();
 		}
 
@@ -56,15 +74,6 @@ namespace ACadSharp.Pdf.Tests
 			exporter.Configuration.OnNotification += this.onNotification;
 
 			return exporter;
-		}
-
-		private CadDocument getDocument()
-		{
-			if (this._document == null)
-			{
-				this._document = DwgReader.Read(Path.Combine(TestVariables.SamplesFolder, "export_sample.dwg"));
-			}
-			return this._document;
 		}
 
 		private void onNotification(object sender, NotificationEventArgs e)

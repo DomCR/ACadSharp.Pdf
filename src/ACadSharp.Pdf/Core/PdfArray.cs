@@ -2,6 +2,10 @@
 using System.Linq;
 using System.Text;
 
+#if NETFRAMEWORK
+using CSUtilities.Extensions;
+#endif
+
 namespace ACadSharp.Pdf.Core
 {
 	public class PdfArray<T> : PdfItem
@@ -27,7 +31,7 @@ namespace ACadSharp.Pdf.Core
 
 			sb.Append("[");
 
-			sb.AppendJoin(' ', this.Items.Select(i => i.GetPdfForm(configuration)));
+			sb.AppendJoin(" ", this.Items.Select(i => i.GetPdfForm(configuration)));
 
 			sb.Append("]");
 

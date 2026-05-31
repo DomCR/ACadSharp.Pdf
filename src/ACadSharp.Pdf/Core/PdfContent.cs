@@ -4,6 +4,7 @@ using ACadSharp.Pdf.Core.IO;
 using ACadSharp.Pdf.Extensions;
 using CSMath;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace ACadSharp.Pdf.Core
@@ -40,8 +41,7 @@ namespace ACadSharp.Pdf.Core
 
 		private string createDrawingString(PdfConfiguration configuration)
 		{
-			PdfPen pen = new PdfPen(configuration);
-			pen.PaperUnits = Layout.PaperUnits;
+			PdfPen pen = new PdfPen(this.Layout, configuration);
 
 			this._sb.Clear();
 
@@ -82,7 +82,7 @@ namespace ACadSharp.Pdf.Core
 			//(cos q) (sin q) (-sin q) (cos q) 0 0 cm
 
 			this.getTotalTranslation(out double xt, out double yt);
-			this._sb.AppendLine($"1 0 0 1 {xt} {yt} {PdfKey.CurrentMatrix}");
+			this._sb.AppendLine($"1 0 0 1 {xt.ToString(CultureInfo.InvariantCulture)} {yt.ToString(CultureInfo.InvariantCulture)} {PdfKey.CurrentMatrix}");
 			this._sb.AppendLine(PdfKey.StackStart);
 		}
 
