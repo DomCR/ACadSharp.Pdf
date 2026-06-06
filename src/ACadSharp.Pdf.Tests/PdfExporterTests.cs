@@ -1,5 +1,9 @@
+using ACadSharp.Entities;
 using ACadSharp.IO;
+using CSMath;
+using System.Globalization;
 using System.IO;
+using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -53,6 +57,42 @@ namespace ACadSharp.Pdf.Tests
 			PdfExporter exporter = this.getPdfExporter(filename);
 			exporter.AddModelSpace(doc);
 			exporter.Close();
+		}
+
+		[Fact]
+		public void InvariantDecimalSeparatorTest()
+		{
+			CultureInfo previousCulture = CultureInfo.CurrentCulture;
+
+			try
+			{
+				//A culture such as fr-FR uses the comma as decimal separator,
+				//which would produce an invalid pdf stream if numbers were not
+				//formatted using the invariant culture.
+				CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
+
+				CadDocument doc = new CadDocument();
+				doc.Entities.Add(new Line(new XYZ(0, 0, 0), new XYZ(12.5, 7.25, 0)));
+
+				string content;
+				using (MemoryStream stream = new MemoryStream())
+				{
+					PdfExporter exporter = new PdfExporter(stream);
+					exporter.AddModelSpace(doc);
+					exporter.Close();
+
+					content = Encoding.ASCII.GetString(stream.ToArray());
+				}
+
+				//No number must use the comma as decimal separator.
+				Assert.DoesNotMatch(@"\d,\d", content);
+				//The decimal point must be used (e.g. MediaBox, coordinates).
+				Assert.Contains(".", content);
+			}
+			finally
+			{
+				CultureInfo.CurrentCulture = previousCulture;
+			}
 		}
 
 		[Theory]

@@ -7,6 +7,7 @@ using ACadSharp.Tables;
 using CSMath;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -123,7 +124,7 @@ namespace ACadSharp.Pdf.Core.IO
 		{
 			LineWeightType lw = entity.GetActiveLineWeightType();
 			double lwValue = lw.GetLineWeightValue();
-			this._sb.AppendLine($"{lwValue.ToPdfUnit(PdfUnitType.Millimeter)} {PdfKey.LineWidth}");
+			this._sb.AppendLine($"{lwValue.ToPdfUnit(PdfUnitType.Millimeter).ToString(this._configuration.DecimalFormat, CultureInfo.InvariantCulture)} {PdfKey.LineWidth}");
 
 			Color color = entity.GetActiveColor();
 
@@ -322,7 +323,7 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private string toPdfDouble(double value)
 		{
-			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat);
+			return (value / this.DenominatorScale).ToPdfUnit(this.PaperUnits).ToString(this._configuration.DecimalFormat, CultureInfo.InvariantCulture);
 		}
 
 		private void writeEntityEnd(Entity entity)
