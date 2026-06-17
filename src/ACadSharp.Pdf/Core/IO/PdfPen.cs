@@ -91,12 +91,20 @@ namespace ACadSharp.Pdf.Core.IO
 
 		private void drawHatch(Hatch hatch, Transform transform)
 		{
-			throw new NotImplementedException();
+			var lines = hatch.ExplodePattern();
+
+			
+			foreach (var line in lines)
+			{
+				this.DrawEntity(line, transform);
+			}
+
+			//throw new NotImplementedException();
 		}
 
 		public override string ToString()
 		{
-			return _sb.ToString();
+			return this._sb.ToString();
 		}
 
 		private void appendArray(string key, params double[] arr)
