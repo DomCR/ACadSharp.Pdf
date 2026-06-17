@@ -311,13 +311,13 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.Stroke);
 
 			//Draw rectangle
-			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.LengthX, box.LengthY);
 			this._sb.AppendLine(PdfKey.Stroke);
 
 			//Limit viewport view
 			this._sb.AppendLine(PdfKey.StackStart);
 
-			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.LengthX, box.LengthY);
 			this._sb.AppendLine("W n");
 
 			var modelBox = viewport.GetModelBoundingBox();
