@@ -63,6 +63,9 @@ namespace ACadSharp.Pdf.Core.IO
 				case Ellipse ellipse:
 					this.drawEllpise(ellipse, transform);
 					break;
+				case Hatch hatch:
+					this.drawHatch(hatch, transform);
+					break;
 				case Line line:
 					this.drawLine(line, transform);
 					break;
@@ -86,9 +89,22 @@ namespace ACadSharp.Pdf.Core.IO
 			this.writeEntityEnd(entity);
 		}
 
+		private void drawHatch(Hatch hatch, Transform transform)
+		{
+			var lines = hatch.ExplodePattern();
+
+			
+			foreach (var line in lines)
+			{
+				this.DrawEntity(line, transform);
+			}
+
+			//throw new NotImplementedException();
+		}
+
 		public override string ToString()
 		{
-			return _sb.ToString();
+			return this._sb.ToString();
 		}
 
 		private void appendArray(string key, params double[] arr)
@@ -295,13 +311,13 @@ namespace ACadSharp.Pdf.Core.IO
 			this._sb.AppendLine(PdfKey.Stroke);
 
 			//Draw rectangle
-			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.LengthX, box.LengthY);
 			this._sb.AppendLine(PdfKey.Stroke);
 
 			//Limit viewport view
 			this._sb.AppendLine(PdfKey.StackStart);
 
-			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.Width, box.Height);
+			this.appendArray(PdfKey.Rectangle, box.Min.X, box.Min.Y, box.LengthX, box.LengthY);
 			this._sb.AppendLine("W n");
 
 			var modelBox = viewport.GetModelBoundingBox();
