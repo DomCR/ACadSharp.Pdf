@@ -93,7 +93,6 @@ namespace ACadSharp.Pdf.Core.IO
 		{
 			var lines = hatch.ExplodePattern();
 
-			
 			foreach (var line in lines)
 			{
 				this.DrawEntity(line, transform);
