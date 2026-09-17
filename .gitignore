@@ -351,3 +351,7 @@ MigrationBackup/
 
 # Custom
 /samples/out/
+
+# Temporal files
+*.dwl
+*.dwl2
